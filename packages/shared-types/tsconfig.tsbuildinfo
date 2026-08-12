@@ -1,0 +1,1 @@
+{"root":["./src/index.ts","./src/premium.ts","./src/common/chat.ts","./src/common/constants.ts","./src/common/events.ts","./src/common/game-settings.ts","./src/common/player.ts","./src/common/room.ts","./src/games/associations.ts","./src/games/crocodile.ts","./src/games/hat.ts","./src/games/mafia.ts"],"version":"5.9.3"}

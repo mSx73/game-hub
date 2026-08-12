@@ -1,0 +1,222 @@
+/* ============================================================================
+ * MelodyRoom.css — неоновая студия: розовый/циан, эквалайзер, DJ-пульт.
+ * ==========================================================================*/
+
+.melody-room {
+  --pink: #ec4899;
+  --cyan: #22d3ee;
+  --bg: #0d0a14;
+  --panel: rgba(255, 255, 255, 0.045);
+  --brd: rgba(236, 72, 153, 0.22);
+  --text: #f4f0f8;
+  --muted: #a49db4;
+  position: relative;
+  min-height: 100dvh;
+  padding: 14px 16px 40px;
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  background:
+    radial-gradient(900px 480px at 20% -10%, rgba(236, 72, 153, 0.13), transparent 60%),
+    radial-gradient(800px 460px at 100% 10%, rgba(34, 211, 238, 0.1), transparent 55%),
+    var(--bg);
+}
+
+.melody-top {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  max-width: 880px; margin: 0 auto 14px;
+}
+.melody-brand {
+  font-family: 'Geologica', 'Inter', sans-serif; font-weight: 800; letter-spacing: 0.06em;
+  background: linear-gradient(100deg, var(--pink), var(--cyan));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.melody-phase {
+  padding: 7px 16px; border-radius: 999px; font-weight: 800; font-size: 0.9rem;
+  background: var(--panel); border: 1px solid var(--brd);
+}
+.melody-attempt { color: #f9a8d4; }
+.melody-timer { font-weight: 800; color: var(--cyan); font-variant-numeric: tabular-nums; min-width: 48px; text-align: right; }
+
+/* DJ */
+.melody-dj { display: flex; gap: 12px; align-items: flex-start; max-width: 880px; margin: 0 auto 14px; }
+.melody-dj-avatar {
+  width: 54px; height: 54px; flex-shrink: 0; display: grid; place-items: center;
+  font-size: 1.7rem; border-radius: 16px;
+  background: linear-gradient(150deg, rgba(236, 72, 153, 0.25), rgba(34, 211, 238, 0.18));
+  border: 1px solid var(--brd);
+}
+.melody-dj-avatar.is-playing { animation: dj-bounce 0.5s ease-in-out infinite; }
+@keyframes dj-bounce { 50% { transform: translateY(-4px) rotate(-4deg); } }
+.melody-dj-bubble {
+  flex: 1; padding: 10px 16px; border-radius: 4px 18px 18px 18px;
+  background: var(--panel); border: 1px solid var(--brd);
+}
+.melody-dj-name { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #f9a8d4; }
+.melody-dj-text { font-weight: 600; font-size: 0.95rem; line-height: 1.45; margin-top: 2px; }
+
+/* Проигрыватель */
+.melody-player {
+  max-width: 880px; margin: 0 auto 14px; padding: 18px;
+  border-radius: 20px; background: var(--panel); border: 1px solid var(--brd);
+  text-align: center;
+}
+.melody-eq {
+  display: flex; align-items: flex-end; justify-content: center; gap: 5px;
+  height: 64px; margin-bottom: 14px;
+}
+.melody-eq span {
+  width: 9px; border-radius: 4px 4px 0 0; height: 12%;
+  background: linear-gradient(180deg, var(--cyan), var(--pink));
+  opacity: 0.35; transition: height 0.3s;
+}
+.melody-eq.is-on span {
+  opacity: 1;
+  animation: eq-dance 0.55s ease-in-out calc(var(--i) * 0.07s) infinite alternate;
+}
+@keyframes eq-dance { from { height: 15%; } to { height: 100%; } }
+.melody-player-controls { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.melody-btn {
+  border: none; border-radius: 999px; padding: 11px 22px; cursor: pointer;
+  font-family: inherit; font-weight: 800; font-size: 0.92rem; color: #fff;
+  background: linear-gradient(135deg, var(--pink), #be185d);
+  box-shadow: 0 8px 22px rgba(236, 72, 153, 0.3);
+  transition: transform 0.14s ease, filter 0.14s;
+}
+.melody-btn--play { background: linear-gradient(135deg, var(--cyan), #0e7490); box-shadow: 0 8px 22px rgba(34, 211, 238, 0.28); }
+.melody-btn--ghost { background: rgba(255, 255, 255, 0.07); border: 1px solid var(--brd); box-shadow: none; }
+.melody-btn:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.08); }
+.melody-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.melody-reveal {
+  margin-top: 14px; padding: 10px 16px; border-radius: 12px; font-size: 0.95rem;
+  background: rgba(34, 211, 238, 0.1); border: 1px solid rgba(34, 211, 238, 0.3);
+  animation: melody-in 0.35s ease both;
+  display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;
+}
+.melody-reveal-art {
+  width: 72px; height: 72px; border-radius: 12px; object-fit: cover;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+
+.melody-cat { color: #67e8f9; }
+
+/* Ввод */
+.melody-guess-wrap { max-width: 880px; margin: 0 auto 14px; }
+.melody-guess {
+  display: flex; gap: 10px;
+}
+.melody-guess input:disabled { opacity: 0.55; }
+.melody-guess-error {
+  margin-top: 7px; padding: 7px 14px; border-radius: 10px; font-size: 0.84rem; font-weight: 600;
+  color: #fcd34d; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3);
+  animation: melody-in 0.25s ease both;
+}
+.melody-guess input {
+  flex: 1; padding: 13px 18px; border-radius: 999px; outline: none;
+  background: rgba(255, 255, 255, 0.05); border: 1px solid var(--brd);
+  color: var(--text); font-family: inherit; font-size: 0.95rem;
+}
+.melody-guess input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.18); }
+
+/* Лента */
+.melody-feed { position: fixed; left: 16px; bottom: 18px; z-index: 8; display: flex; flex-direction: column; gap: 7px; max-width: min(320px, 70vw); pointer-events: none; }
+.melody-toast {
+  padding: 8px 13px; border-radius: 11px; font-size: 0.82rem; font-weight: 600;
+  background: rgba(16, 12, 22, 0.95); border: 1px solid var(--brd); border-left: 3px solid var(--pink);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5); animation: melody-in 0.28s ease both;
+}
+.melody-toast--right { border-left-color: #4ade80; }
+.melody-toast--wrong { border-left-color: #64748b; }
+@keyframes melody-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; } }
+
+/* Табло */
+.melody-board { max-width: 880px; margin: 0 auto; padding: 14px 18px; border-radius: 16px; background: var(--panel); border: 1px solid rgba(255, 255, 255, 0.07); }
+.melody-board-title { font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 8px; }
+.melody-board-row { display: flex; justify-content: space-between; padding: 6px 4px; font-size: 0.92rem; border-bottom: 1px dashed rgba(255, 255, 255, 0.06); }
+.melody-board-row:last-child { border-bottom: none; }
+.melody-board-row.is-top { color: #fcd34d; }
+
+/* Финал */
+.melody-final {
+  position: fixed; inset: 0; z-index: 40; display: grid; place-items: center;
+  background: rgba(8, 6, 12, 0.85); backdrop-filter: blur(4px); animation: melody-in 0.4s ease both;
+}
+.melody-final-card {
+  text-align: center; padding: 30px 40px; border-radius: 22px; max-width: min(460px, 92vw);
+  background: linear-gradient(180deg, #1d1428, #120d1c);
+  border: 1px solid var(--brd); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65);
+}
+.melody-final-title { font-family: 'Geologica', sans-serif; font-weight: 800; font-size: 1.4rem; }
+.melody-final-winner { margin-top: 8px; color: #f9a8d4; }
+.melody-final-list { margin-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+.melody-final-row {
+  display: flex; justify-content: space-between; gap: 14px; padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.05); border-radius: 10px; font-size: 0.9rem;
+}
+.melody-final-hint { margin-top: 14px; font-size: 0.8rem; color: var(--muted); }
+
+@media (max-width: 640px) {
+  .melody-room {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .melody-top {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+  .melody-brand {
+    font-size: 0.85rem;
+    flex: 1 1 100%;
+  }
+  .melody-phase {
+    font-size: 0.78rem;
+    flex: 1;
+  }
+  .melody-timer {
+    font-size: 1rem;
+  }
+  .melody-dj {
+    flex-direction: column;
+    text-align: center;
+    padding: 12px;
+  }
+  .melody-player-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+  .melody-btn {
+    min-height: 48px;
+    min-width: 48px;
+    padding: 10px 16px;
+  }
+  .melody-btn--play {
+    flex: 1 1 100%;
+    font-size: 1rem;
+  }
+  .melody-guess,
+  .melody-guess-wrap form {
+    flex-direction: column !important;
+    gap: 10px;
+    width: 100%;
+    padding: 0 12px;
+  }
+  .melody-guess input,
+  .melody-guess-wrap input {
+    width: 100%;
+    min-height: 48px;
+    font-size: 16px;
+  }
+  .melody-guess button,
+  .melody-guess-wrap button {
+    width: 100%;
+    min-height: 48px;
+  }
+  .melody-board {
+    margin: 12px;
+    padding: 12px;
+  }
+  .melody-reveal-art {
+    max-width: min(280px, 90vw);
+    height: auto;
+  }
+}
