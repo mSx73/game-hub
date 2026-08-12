@@ -61,7 +61,7 @@ export class AliasEngine extends EventEmitter {
 
     const activeIds = new Set(
       (this.room?.players ?? [])
-        .filter(p => !p.isSpectator && p.isOnline !== false)
+        .filter(p => !p.isSpectator && !p.disconnected)
         .map(p => p.id),
     );
     if (activeIds.size > 0) {
@@ -128,7 +128,7 @@ export class AliasEngine extends EventEmitter {
     if (!explainer || playerId === explainer.id) return false;
 
     const guess = message.trim().toLowerCase();
-    if (!guess || !this.currentWord) return false;
+    if (!guess) return false;
     if (guess === this.currentWord.toLowerCase()) {
       this.stopTimer();
       const elapsed = (Date.now() - this.turnStartedAt) / 1000;
@@ -145,11 +145,6 @@ export class AliasEngine extends EventEmitter {
         guesserName: guesser?.name ?? 'Кто-то',
         word: this.currentWord,
       });
-      // Между верным ответом и nextTurn() — 2с окно (advanceTurn ниже), в течение
-      // которого currentWord не менялся: ЛЮБОЙ другой игрок, написавший то же
-      // слово, снова получал очки И повторно продвигал ход/раунд. Обнуляем
-      // сразу, чтобы повторное совпадение было в принципе невозможно.
-      this.currentWord = null;
       this.emit('score:updated', {
         players: this.players.map(p => ({ id: p.id, name: p.name, score: p.score })),
       });
