@@ -117,7 +117,16 @@ export function registerCrocodileHandlers(io, socket, roomManager) {
 
     engine.on('turn:started', (data) => {
       io.to(room.code).emit(`${evPrefix}:clear`);
-      io.to(room.code).emit(`${evPrefix}:turn-started`, data);
+      const word = String(data?.word || '');
+      const wordLength = word.replace(/ /g, '').length;
+      const wordPattern = word ? word.replace(/[^ ]/g, '_') : '';
+      const { word: _secret, ...rest } = data || {};
+      io.to(room.code).emit(`${evPrefix}:turn-started`, {
+        ...rest,
+        word: wordPattern,
+        wordLength,
+        wordPattern,
+      });
     });
 
     engine.on('word:pick', (data) => {

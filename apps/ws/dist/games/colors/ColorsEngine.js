@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+import { isPlayerOnline, pruneOfflineFromMap } from '../../core/playerOnline.js';
 
 const COLORS = [
   { name: 'Красный', value: '#ff4757', hex: 'ff4757' },
@@ -36,7 +37,7 @@ export class ColorsEngine extends EventEmitter {
     if (this._aborted) return;
     // Заполняем игроков из комнаты. Раньше this.players оставался пустым (addPlayer никто
     // не вызывал), а generic-handler звал engine.start(), которого не было → игра падала на старте.
-    const roomPlayers = (this.room?.players ?? []).filter((p) => !p.isSpectator);
+    const roomPlayers = (this.room?.players ?? []).filter((p) => !p.isSpectator && isPlayerOnline(p, this.room));
     for (const p of roomPlayers) {
       if (!this.players.has(p.id)) {
         this.players.set(p.id, { id: p.id, name: p.name, score: 0, lives: 3, ready: false });
@@ -65,14 +66,15 @@ export class ColorsEngine extends EventEmitter {
   }
 
   setReady(playerId, ready) {
+    pruneOfflineFromMap(this.players, this.room);
     const player = this.players.get(playerId);
     if (player) {
       player.ready = ready;
       this.emit('player:ready', { playerId, ready });
-      
-      // Если все готовы и минимум 2 игрока
-      const allReady = Array.from(this.players.values()).every(p => p.ready);
-      if (allReady && this.players.size >= 2 && this.state === 'waiting') {
+
+      const onlinePlayers = Array.from(this.players.values()).filter((p) => isPlayerOnline(p, this.room));
+      const allReady = onlinePlayers.length >= 2 && onlinePlayers.every((p) => p.ready);
+      if (allReady && this.state === 'waiting') {
         this.startRound();
       }
     }

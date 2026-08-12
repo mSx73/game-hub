@@ -61,7 +61,7 @@ export class AliasEngine extends EventEmitter {
 
     const activeIds = new Set(
       (this.room?.players ?? [])
-        .filter(p => !p.isSpectator && !p.disconnected)
+        .filter(p => !p.isSpectator && p.isOnline !== false)
         .map(p => p.id),
     );
     if (activeIds.size > 0) {

@@ -1,0 +1,385 @@
+/* ============================================================================
+ * MafiaRoom.css — «Игровой стол» кастомной Мафии (Salo.fun standard).
+ * CSS Grid-сцена: #game-table в центре, карточки игроков по периметру.
+ * Премиальный dark-режим, неоновые/пастельные свечения, радиусы 16px+.
+ * Анимации: занавес «город засыпает», пульс говорящего, смерть в тумане/крови.
+ * Шрифт: Geologica (заголовки) / Inter (текст) — подключаются в index.html.
+ * ==========================================================================*/
+
+.mafia-room {
+  --bg: #0a0b12;
+  --bg-2: #0f1018;
+  --panel: rgba(255, 255, 255, 0.04);
+  --panel-brd: rgba(255, 255, 255, 0.08);
+  --text: #eef0fb;
+  --muted: #9aa0b6;
+  --neon: #7c6cff;          /* основной неон (фиолет) */
+  --neon-2: #22d3ee;        /* холодный акцент (циан) */
+  --speak: #ffd76a;         /* пульс говорящего (тёплый) */
+  --blood: #e23b4e;         /* смерть/кровь */
+  --radius: 18px;
+
+  position: relative;
+  min-height: 100dvh;
+  background:
+    radial-gradient(1100px 600px at 50% -10%, rgba(124, 108, 255, 0.14), transparent 60%),
+    radial-gradient(900px 500px at 100% 100%, rgba(34, 211, 238, 0.07), transparent 55%),
+    var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* ───────── Топ-полоса фазы ───────── */
+.mafia-room__top {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding: 16px 22px;
+  position: relative; z-index: 4;
+}
+.mafia-room__brand {
+  font-family: 'Geologica', 'Inter', sans-serif;
+  font-weight: 800; letter-spacing: 0.04em; font-size: 1.15rem;
+  display: inline-flex; align-items: center; gap: 9px;
+  background: linear-gradient(100deg, #fff, var(--neon) 60%, var(--neon-2));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.mafia-room__brand::before {
+  content: ''; width: 9px; height: 9px; border-radius: 50%;
+  background: var(--blood); box-shadow: 0 0 12px var(--blood);
+  -webkit-text-fill-color: initial;
+}
+.mafia-room__phase {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 8px 16px; border-radius: 999px;
+  background: var(--panel); border: 1px solid var(--panel-brd);
+  font-weight: 700; font-size: 0.9rem; backdrop-filter: blur(10px);
+}
+.mafia-room__timer {
+  font-variant-numeric: tabular-nums; font-weight: 800;
+  font-family: 'Geologica', monospace; font-size: 1.05rem; color: var(--neon-2);
+}
+
+/* ───────── Сцена-стол (CSS Grid) ───────── */
+.mafia-stage {
+  position: relative; z-index: 2;
+  display: grid; place-items: center;
+  width: min(94vw, 1100px);
+  margin: 0 auto;
+  aspect-ratio: 16 / 11;
+  max-height: 78dvh;
+}
+
+/* Центральное динамическое поле */
+#game-table {
+  grid-area: 1 / 1;
+  width: 50%; aspect-ratio: 1.5 / 1;
+  border-radius: 50%;
+  display: grid; place-items: center; text-align: center;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 42%, rgba(255, 255, 255, 0.05), transparent 55%),
+    radial-gradient(ellipse 100% 100% at 50% 50%, #1a1530 0%, #110d20 60%, #0a0712 100%);
+  border: 1px solid rgba(124, 108, 255, 0.22);
+  box-shadow:
+    0 40px 90px rgba(0, 0, 0, 0.7),
+    inset 0 0 0 10px rgba(0, 0, 0, 0.3),
+    inset 0 0 120px rgba(124, 108, 255, 0.1);
+  transition: box-shadow 0.6s ease, border-color 0.6s ease;
+}
+#game-table .gt-emblem {
+  font-size: clamp(2.4rem, 6vw, 3.4rem); line-height: 1;
+  filter: drop-shadow(0 0 22px rgba(124, 108, 255, 0.5));
+  animation: gt-breathe 4.5s ease-in-out infinite;
+}
+#game-table .gt-phase {
+  margin-top: 10px; font-family: 'Geologica', 'Inter', sans-serif;
+  font-weight: 800; font-size: clamp(0.95rem, 2.4vw, 1.3rem);
+  letter-spacing: 0.16em; text-transform: uppercase;
+}
+#game-table .gt-sub { margin-top: 4px; color: var(--muted); font-size: 0.82rem; }
+
+/* Фазовые акценты центра */
+#game-table.is-night { border-color: rgba(80, 120, 255, 0.3); box-shadow: 0 40px 90px rgba(0,0,0,.8), inset 0 0 140px rgba(40,60,160,.22); }
+#game-table.is-night .gt-emblem { filter: drop-shadow(0 0 26px rgba(120, 160, 255, 0.6)); }
+#game-table.is-voting { border-color: rgba(226, 59, 78, 0.35); box-shadow: 0 40px 90px rgba(0,0,0,.75), inset 0 0 140px rgba(226,59,78,.16); }
+#game-table.is-voting .gt-emblem { filter: drop-shadow(0 0 26px rgba(226, 59, 78, 0.6)); }
+
+/* ───────── Карточки игроков по периметру (тригонометрия в CSS) ───────── */
+.seat {
+  --r: 50%;                 /* радиус раскладки */
+  --a: calc((360deg / var(--n)) * var(--i) + 90deg);
+  position: absolute;
+  left: calc(50% + var(--r) * cos(var(--a)));
+  top: calc(50% + (var(--r) * 0.82) * sin(var(--a)));
+  transform: translate(-50%, -50%);
+  width: clamp(78px, 9vw, 104px);
+  animation: seat-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: calc(var(--i) * 60ms);
+  z-index: 3;
+}
+
+.player-card {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  padding: 10px 8px 8px;
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  border: 1px solid var(--panel-brd);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, filter 0.4s ease;
+}
+.player-card__avatar {
+  width: 52px; height: 52px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-family: 'Geologica', 'Inter', sans-serif; font-weight: 800; font-size: 1.25rem;
+  color: #fff;
+  background: radial-gradient(circle at 38% 30%, #3b3650, #1a1626);
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 2px 6px rgba(255,255,255,0.12), 0 6px 16px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+.player-card__avatar img { width: 100%; height: 100%; object-fit: cover; }
+.player-card__name {
+  max-width: 100%; font-weight: 700; font-size: 0.82rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.player-card__seat-no {
+  position: absolute; top: -6px; left: -6px;
+  width: 20px; height: 20px; border-radius: 50%;
+  display: grid; place-items: center; font-size: 0.62rem; font-weight: 800;
+  background: linear-gradient(135deg, var(--neon), #4a3fb0); color: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,.5);
+}
+.player-card__badge {
+  font-size: 0.64rem; font-weight: 800; letter-spacing: 0.04em;
+  padding: 2px 8px; border-radius: 999px; text-transform: uppercase;
+}
+
+/* hover/targetable */
+.seat.is-targetable .player-card { cursor: pointer; border-color: rgba(226,59,78,.5); }
+.seat.is-targetable .player-card:hover { transform: translateY(-3px); box-shadow: 0 0 0 2px var(--blood), 0 14px 30px rgba(0,0,0,.5); }
+.seat.is-self .player-card { border-color: rgba(255, 215, 106, 0.5); }
+.seat.is-self .player-card__avatar { border-color: var(--speak); box-shadow: 0 0 0 3px rgba(255,215,106,.2), inset 0 2px 6px rgba(255,255,255,.14); }
+
+/* ───────── Пульс говорящего (от серверной очереди речи) ───────── */
+.seat.is-speaking { z-index: 6; }
+.seat.is-speaking .player-card {
+  border-color: var(--speak);
+  transform: translateY(-4px) scale(1.05);
+  animation: speak-pulse 1.3s ease-in-out infinite;
+}
+.seat.is-speaking .player-card__avatar { border-color: var(--speak); }
+
+/* ───────── Смерть: растворение в тумане + кровь ───────── */
+.seat.is-dying { z-index: 8; }
+.seat.is-dying .player-card { animation: die-fog 1.6s ease forwards; }
+.seat.is-dying .player-card::after {
+  /* кровь: всплеск из-под аватара */
+  content: ''; position: absolute; inset: 0; border-radius: var(--radius);
+  background: radial-gradient(circle at 50% 38%, rgba(226,59,78,0.55), transparent 60%);
+  opacity: 0; animation: blood-bloom 1.6s ease forwards;
+  pointer-events: none;
+}
+.seat.is-dying .player-card::before {
+  /* туман */
+  content: ''; position: absolute; inset: -20% -10% 0; border-radius: 40%;
+  background: radial-gradient(ellipse at 50% 80%, rgba(180,190,220,0.35), transparent 70%);
+  filter: blur(8px); opacity: 0; animation: fog-rise 1.6s ease forwards; pointer-events: none;
+}
+.seat.dead .player-card {
+  filter: grayscale(1) brightness(0.5); opacity: 0.5;
+  transform: rotate(-4deg);
+  border-color: rgba(255,255,255,0.06);
+}
+.seat.dead .player-card__avatar::after {
+  content: '✝'; position: absolute; inset: 0; display: grid; place-items: center;
+  background: rgba(0,0,0,0.5); color: #cfd3e6; font-size: 1.1rem;
+}
+
+/* ───────── Занавес «город засыпает» ───────── */
+.mafia-room__curtain {
+  position: fixed; inset: 0; z-index: 5; pointer-events: none;
+  background:
+    radial-gradient(120% 80% at 50% -10%, transparent 30%, rgba(6,8,20,0.55) 70%),
+    linear-gradient(180deg, rgba(8,10,24,0.0), rgba(6,8,18,0.0));
+  opacity: 0; transition: opacity 0.9s ease;
+}
+.mafia-room.is-night .mafia-room__curtain {
+  opacity: 1;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(6,8,22,0.35) 20%, rgba(4,5,14,0.82) 75%),
+    linear-gradient(180deg, rgba(8,10,28,0.5), rgba(4,5,12,0.7));
+}
+.mafia-room.is-night .mafia-stage { filter: brightness(0.7) saturate(0.9); transition: filter 0.9s ease; }
+.mafia-room__moon {
+  position: fixed; top: 8%; right: 9%; z-index: 5; font-size: 2.4rem;
+  filter: drop-shadow(0 0 26px rgba(150,180,255,0.7));
+  opacity: 0; transform: translateY(-12px) scale(0.8);
+  transition: opacity 0.9s ease, transform 0.9s ease; pointer-events: none;
+}
+.mafia-room.is-night .mafia-room__moon { opacity: 1; transform: translateY(0) scale(1); }
+
+/* ───────── Keyframes ───────── */
+@keyframes seat-pop { from { opacity: 0; transform: translate(-50%, -50%) scale(0.6); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+@keyframes gt-breathe { 0%,100% { transform: scale(1); opacity: 0.92; } 50% { transform: scale(1.07); opacity: 1; } }
+@keyframes speak-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,215,106,0.55), 0 14px 30px rgba(0,0,0,0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(255,215,106,0.0), 0 0 26px rgba(255,215,106,0.5), 0 14px 30px rgba(0,0,0,0.4); }
+}
+@keyframes die-fog {
+  0% { filter: none; opacity: 1; transform: translateY(0) scale(1); }
+  55% { filter: blur(2px) grayscale(0.6) brightness(0.8); opacity: 0.85; transform: translateY(-4px) scale(1.02); }
+  100% { filter: blur(7px) grayscale(1) brightness(0.45); opacity: 0; transform: translateY(-18px) scale(0.9); }
+}
+@keyframes blood-bloom { 0%,30% { opacity: 0; } 55% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes fog-rise { 0% { opacity: 0; transform: translateY(10px); } 50% { opacity: 1; } 100% { opacity: 0; transform: translateY(-26px); } }
+
+/* ───────── Док действий (низ экрана) ───────── */
+.mafia-dock {
+  position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
+  z-index: 7; display: flex; align-items: center; gap: 14px;
+  padding: 12px 16px 12px 20px; border-radius: 999px;
+  background: rgba(14, 15, 24, 0.92); border: 1px solid var(--panel-brd);
+  backdrop-filter: blur(16px); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+  max-width: calc(100vw - 32px);
+}
+.mafia-dock--hint { color: var(--muted); font-weight: 600; font-size: 0.9rem; justify-content: center; }
+.mafia-dock__label { font-weight: 700; font-size: 0.92rem; white-space: nowrap; }
+.mafia-dock--night .mafia-dock__label { color: #b9b0ff; }
+.mafia-dock--vote .mafia-dock__label { color: #ffb4bd; }
+.mafia-dock__btn {
+  border: none; border-radius: 999px; padding: 11px 20px; cursor: pointer;
+  font-weight: 800; font-size: 0.9rem; font-family: inherit; color: #fff;
+  background: linear-gradient(135deg, var(--neon), #4a3fb0);
+  box-shadow: 0 8px 22px rgba(124, 108, 255, 0.35);
+  transition: transform 0.14s ease, filter 0.14s ease, opacity 0.14s ease;
+  white-space: nowrap;
+}
+.mafia-dock--vote .mafia-dock__btn { background: linear-gradient(135deg, var(--blood), #9c1f2e); box-shadow: 0 8px 22px rgba(226, 59, 78, 0.35); }
+.mafia-dock__btn:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.08); }
+.mafia-dock__btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.gt-gameover { display: grid; place-items: center; gap: 4px; }
+
+/* ───────── Утренний итог ночи (кинематографичный оверлей) ───────── */
+.mafia-morning {
+  position: fixed; inset: 0; z-index: 40; display: grid; place-items: center;
+  background: radial-gradient(circle at 50% 38%, rgba(12, 10, 20, 0.5), rgba(6, 6, 12, 0.82));
+  backdrop-filter: blur(3px);
+  animation: morning-fade 0.45s ease both;
+  pointer-events: none;
+}
+.mafia-morning__card {
+  text-align: center; padding: 30px 44px; border-radius: 24px; max-width: 90vw;
+  background: linear-gradient(180deg, rgba(32, 27, 46, 0.97), rgba(16, 14, 26, 0.97));
+  border: 1px solid var(--panel-brd);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  animation: morning-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.mafia-morning__sun { font-size: 3.4rem; filter: drop-shadow(0 0 26px rgba(255, 200, 120, 0.6)); }
+.mafia-morning__title {
+  font-family: 'Geologica', 'Inter', sans-serif; font-weight: 800; font-size: 1.5rem;
+  letter-spacing: 0.05em; margin-top: 6px; color: #fff;
+}
+.mafia-morning__dead { margin-top: 12px; font-size: 1.05rem; color: #ffb4bd; }
+.mafia-morning__dead b { color: #fff; }
+.mafia-morning__safe { margin-top: 12px; font-size: 1.05rem; color: #8ee6b0; }
+@keyframes morning-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes morning-pop { from { opacity: 0; transform: scale(0.82) translateY(12px); } to { opacity: 1; } }
+
+/* ───────── Лента событий (что происходит: ночь/проверка/казнь) ───────── */
+.mafia-feed {
+  position: fixed; left: 18px; bottom: 92px; z-index: 8;
+  display: flex; flex-direction: column; gap: 8px;
+  max-width: min(320px, 70vw); pointer-events: none;
+}
+.mafia-toast {
+  padding: 9px 14px; border-radius: 12px; font-size: 0.84rem; font-weight: 600;
+  background: rgba(20, 16, 28, 0.95); border: 1px solid var(--panel-brd);
+  border-left: 3px solid var(--neon); color: var(--text);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+  animation: toast-in 0.3s ease both;
+}
+.mafia-toast--death { border-left-color: var(--blood); }
+.mafia-toast--safe { border-left-color: #34d399; }
+.mafia-toast--info { border-left-color: var(--neon-2); }
+@keyframes toast-in { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; } }
+
+/* ───────── Реплика бота (пузырь над карточкой) ───────── */
+.player-bubble {
+  position: absolute;
+  bottom: calc(100% + 7px);
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 190px;
+  width: max-content;
+  background: rgba(22, 18, 32, 0.97);
+  border: 1px solid var(--panel-brd);
+  color: #eef0fb;
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.32;
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 13px;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.55);
+  z-index: 30;
+  pointer-events: none;
+  animation: bubble-in 0.25s ease both;
+}
+.player-bubble::after {
+  content: '';
+  position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  border: 6px solid transparent; border-top-color: rgba(22, 18, 32, 0.97);
+}
+@keyframes bubble-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(5px) scale(0.92); }
+  to { opacity: 1; transform: translateX(-50%); }
+}
+
+/* ───────── Когда ТЫ ходишь ночью — стол светлый (город спит, ты не спишь) ───────── */
+.mafia-room--acting.is-night .mafia-stage { filter: none !important; }
+.mafia-room--acting.is-night .mafia-room__curtain { opacity: 0.42 !important; }
+.mafia-room--acting.is-night #game-table {
+  border-color: rgba(226, 59, 78, 0.4);
+  box-shadow: 0 40px 90px rgba(0,0,0,.7), inset 0 0 150px rgba(60,30,60,.3), 0 0 60px rgba(226,59,78,.12);
+}
+
+/* ───────── Чип роли в топбаре (всегда помнишь свою роль) ───────── */
+.mafia-room__role {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 14px; border-radius: 999px; font-weight: 800; font-size: 0.88rem;
+  font-family: 'Geologica', 'Inter', sans-serif;
+  background: rgba(255,255,255,0.05); border: 1px solid var(--panel-brd);
+  backdrop-filter: blur(10px);
+}
+.mafia-room__role--mafia { color: #ff8a93; border-color: rgba(226,59,78,.45); background: rgba(226,59,78,.12); }
+.mafia-room__role--town { color: #9ec3ff; border-color: rgba(96,150,255,.4); background: rgba(96,150,255,.1); }
+.mafia-room__role--maniac { color: #ffb066; border-color: rgba(255,140,60,.45); background: rgba(255,140,60,.12); }
+.mafia-room__role--vampire { color: #d7a8ff; border-color: rgba(168,108,255,.45); background: rgba(168,108,255,.12); }
+
+/* ───────── Реквизит «твоя роль» на раздаче ───────── */
+.gt-rolereveal { display: grid; place-items: center; gap: 6px; animation: gt-reveal-pop 0.5s cubic-bezier(.34,1.56,.64,1) both; }
+.gt-rolereveal .gt-emblem { font-size: clamp(3rem, 8vw, 4.4rem); }
+.gt-team {
+  margin-top: 4px; padding: 5px 14px; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
+  background: rgba(255,255,255,0.06); border: 1px solid var(--panel-brd);
+}
+.gt-team--mafia { color: #ff8a93; }
+.gt-team--town { color: #9ec3ff; }
+.gt-team--maniac { color: #ffb066; }
+.gt-team--vampire { color: #d7a8ff; }
+@keyframes gt-reveal-pop { from { opacity: 0; transform: scale(0.7) rotateX(40deg); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .seat, #game-table .gt-emblem, .seat.is-speaking .player-card { animation: none !important; }
+}
+
+/* ───────── Адаптив ───────── */
+@media (max-width: 640px) {
+  .mafia-stage { aspect-ratio: 3 / 4; max-height: none; }
+  #game-table { width: 58%; }
+  .seat { width: clamp(60px, 20vw, 84px); }
+  .player-card__avatar { width: 42px; height: 42px; font-size: 1.05rem; }
+}

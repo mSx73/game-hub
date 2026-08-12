@@ -102,7 +102,33 @@ describe('SpyEngine — ничья в голосовании', () => {
   });
 });
 
-describe('StoryEngine — дисконнект автора не вешает игру', () => {
+describe('SyncEngine — оффлайн не блокирует ready', () => {
+  test('setReady игнорирует оффлайновых при проверке allReady', () => {
+    const { SyncEngine } = require('../games/sync/SyncEngine.js');
+    const room = mkRoom(3);
+    room.players[2].isOnline = false;
+    const g = new SyncEngine(room);
+    g.start();
+    g.setReady('p0', true);
+    g.setReady('p1', true);
+    expect(g.state).toBe('countdown');
+    g.cleanup();
+  });
+});
+
+describe('PasswordEngine — оффлайн пропускается в ротации ведущего', () => {
+  test('nextClueGiver не возвращает оффлайн id', () => {
+    const { PasswordEngine } = require('../games/password/PasswordEngine.js');
+    const room = mkRoom(3);
+    const g = new PasswordEngine(room);
+    g.start();
+    room.players[0].isOnline = false;
+    g.clueGiverId = 'p0';
+    expect(g.nextClueGiver()).toBe('p1');
+    g.cleanup();
+  });
+});
+
   test('noTimeLimit: handlePlayerDisconnect передаёт ход', () => {
     const room = mkRoom(3, { settings: { noTimeLimit: true, maxStories: 1 } });
     const g = new StoryEngine(room);

@@ -18,6 +18,8 @@ import { MAFIA_PHASE_LABELS, getMafiaActionTypeForPhase } from '@playforfun/shar
 import './RoomPage.css';
 import '../styles/games-unified-skin.css';
 import '../components/LobbyRedesigned.css';
+import { CrocodileLuxeChrome, CrocodileLuxeBottomNav } from '../games/crocodile/CrocodileLuxeChrome';
+import '../games/crocodile/croc-luxe.css';
 
 const CROSSWORD_CORPORATE_WORD_COUNT = 60;
 const CROSSWORD_AUTO_SIZE_PRESETS = [12, 18, 24, 30, 36, 45, 60];
@@ -938,7 +940,7 @@ function RoomPage() {
       setCrocWordChoices(null);
       setCrocSelectionDeadline(0);
       setCrocTurn(data || null);
-      setCrocMyWord('');
+      if (data?.explainerId !== socket.id) setCrocMyWord('');
       setCrocStrokes([]);
       setCrocTimer(Number(data?.timeLeft) || 0);
       setCrocTimeoutWord(null);
@@ -2521,6 +2523,23 @@ function RoomPage() {
   const isMafiaNight = room?.gameType === 'mafia' && String(phase || '').startsWith('night-');
   const isMafiaNoirMode = room?.gameType === 'mafia' && room?.status !== 'waiting';
   const isCrocodileLuxeMode = isCrocodileDrawGame(room?.gameType) && room?.status !== 'waiting';
+  const crocGuessActive =
+    isCrocodileLuxeMode &&
+    crocTurn?.explainerId === socket.id &&
+    !crocTransition &&
+    !(crocWordChoices?.choices?.length > 0);
+
+  const handleCrocConfirmGuess = useCallback((guesserId) => {
+    setCrocConfirmingIds((prev) => new Set(prev).add(guesserId));
+    socket.emit('crocodile:manual-confirm', { guesserId }, (res) => {
+      setCrocConfirmingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(guesserId);
+        return next;
+      });
+      if (!res?.success) toast.error(res?.error || 'Не удалось засчитать');
+    });
+  }, [toast]);
   const showMafiaDebugPanels = Boolean(import.meta.env.DEV);
   const isMafiaRoleActive = isMafiaNight && actionPrompt && gameState?.myRole;
   const hostNightActions = Array.isArray(gameState?.hostNightActions) ? gameState.hostNightActions : [];
@@ -2739,93 +2758,18 @@ function RoomPage() {
         )}
 
         {isCrocodileLuxeMode && (
-          <>
-            <header className="croc-luxe-topbar">
-              <div className="croc-luxe-topbar__left">
-                <strong>CROCODILE.IO</strong>
-                <div>
-                  <span>Room Code</span>
-                  <b>{room.code}</b>
-                </div>
-              </div>
-              <div className="croc-luxe-topbar__right">
-                <div className="croc-luxe-timer">
-                  ⏱ {String(Math.floor(Math.max(0, crocTimer) / 60)).padStart(2, '0')}:
-                  {String(Math.max(0, crocTimer) % 60).padStart(2, '0')}
-                </div>
-              </div>
-            </header>
-
-            <aside className="croc-luxe-col croc-luxe-col--left">
-              <section className="croc-luxe-card">
-                <div className="croc-luxe-card__head">
-                  <h3>Leaderboard</h3>
-                </div>
-                <div className="croc-luxe-list">
-                  {crocScoreRows.length ? (
-                    crocScoreRows.map((row) => (
-                      <div key={row.id || row.name} className={`croc-luxe-rank ${row.isSelf ? 'self' : ''}`}>
-                        <div>
-                          <strong>{row.name}</strong>
-                          <span>{row.rank ? `#${row.rank}` : '-'}</span>
-                        </div>
-                        <b>{row.score ?? 0} PTS</b>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="croc-luxe-empty">Очки появятся после первой отгадки.</p>
-                  )}
-                </div>
-              </section>
-            </aside>
-
-            <aside className="croc-luxe-col croc-luxe-col--right">
-              {crocTurn?.explainerId === socket.id && (
-                <section className="croc-luxe-card">
-                  <div className="croc-luxe-card__head">
-                    <h3>Кто угадал?</h3>
-                  </div>
-                  <div className="croc-luxe-list">
-                    {players.filter((p) => p.id !== socket.id && !p.isSpectator).map((p) => {
-                      const already = crocGuessedIds.has(p.id);
-                      const inFlight = crocConfirmingIds.has(p.id);
-                      return (
-                        <button
-                          key={p.id}
-                          type="button"
-                          className="croc-luxe-guess-btn"
-                          disabled={already || inFlight}
-                          onClick={() => {
-                            setCrocConfirmingIds((prev) => new Set(prev).add(p.id));
-                            socket.emit('crocodile:manual-confirm', { guesserId: p.id }, (res) => {
-                              setCrocConfirmingIds((prev) => {
-                                const next = new Set(prev);
-                                next.delete(p.id);
-                                return next;
-                              });
-                              if (!res?.success) toast.error(res?.error || 'Не удалось засчитать');
-                            });
-                          }}
-                        >
-                          {already ? '✓✓' : '✓'} {p.name}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </section>
-              )}
-              {crocTurn?.explainerId !== socket.id && (
-                <section className="croc-luxe-card">
-                  <div className="croc-luxe-card__head">
-                    <h3>Угадывание</h3>
-                  </div>
-                  <p style={{ padding: '12px', opacity: 0.7, fontSize: '0.9em' }}>
-                    Называйте слово вслух — рисующий подтвердит правильный ответ.
-                  </p>
-                </section>
-              )}
-            </aside>
-          </>
+          <CrocodileLuxeChrome
+            roomCode={room.code}
+            crocTimer={crocTimer}
+            crocScoreRows={crocScoreRows}
+            crocTurn={crocTurn}
+            players={players}
+            socketId={socket.id}
+            crocGuessedIds={crocGuessedIds}
+            crocConfirmingIds={crocConfirmingIds}
+            onConfirmGuess={handleCrocConfirmGuess}
+            guessActive={crocGuessActive}
+          />
         )}
           
         {isHost && room.status === 'playing' && room.gameType !== 'mafia' && !isCrocodileLuxeMode && (
@@ -3733,22 +3677,97 @@ correct:2`}
         )}
 
         {isCrocodileDrawGame(room.gameType) && room.status !== 'waiting' && (
+          isCrocodileLuxeMode ? (
+            <div className="game-area croc-game croc-luxe-main room-page__croc-luxe-main">
+              {isCrocodileLuxeMode && crocTurn?.explainerId !== socket.id && (crocTurn?.wordPattern || crocTurn?.wordLength > 0) && (
+                <div className="croc-letter-banner" role="status">
+                  <span className="croc-letter-banner__label">Букв в слове:</span>
+                  <strong>{crocTurn.wordLength ?? crocTurn.word?.replace(/ /g, '').length ?? '?'}</strong>
+                  {crocTurn.wordPattern && (
+                    <span className="croc-letter-banner__pattern">{crocTurn.wordPattern}</span>
+                  )}
+                </div>
+              )}
+              {crocTimeoutWord && (
+                <div className="croc-timeout-reveal" role="status" aria-live="polite">
+                  <span className="croc-timeout-reveal__icon">⏰</span>
+                  <span className="croc-timeout-reveal__label">Время вышло! Слово было:</span>
+                  <span className="croc-timeout-reveal__word">{crocTimeoutWord}</span>
+                </div>
+              )}
+              {crocTransition ? (
+                <div className="croc-transition">
+                  <div className="croc-transition-label">Следующий ход</div>
+                  <div className="croc-transition-name">{crocTransition.name}</div>
+                </div>
+              ) : crocWordChoices?.choices?.length > 0 ? (
+                <div className="croc-word-choices">
+                  <p className="croc-word-choices-label">
+                    Выберите слово для рисования
+                    {crocSelectionDeadline > 0 && (
+                      <CrocSelectionCountdown deadline={crocSelectionDeadline} />
+                    )}
+                  </p>
+                  <div className="croc-word-choices-buttons">
+                    {crocWordChoices.choices.map((word, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        className="croc-word-choice"
+                        onClick={() => {
+                          socket.emit('crocodile:select-word', idx, (res) => {
+                            if (res?.success) setCrocWordChoices(null);
+                            else toast.error(res?.error || 'Не удалось выбрать слово');
+                          });
+                        }}
+                      >
+                        {word}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="croc-canvas-wrapper">
+                  <CrocodileCanvas
+                    isExplainer={crocTurn?.explainerId === socket.id}
+                    className="croc-luxe-canvas"
+                    strokes={crocStrokes}
+                    onDraw={(stroke) => {
+                      setCrocStrokes((prev) => [...prev, stroke]);
+                      socket.emit('crocodile:draw', stroke);
+                    }}
+                    onClear={() => {
+                      setCrocStrokes([]);
+                      socket.emit('crocodile:clear');
+                    }}
+                    onUndo={() => {
+                      setCrocStrokes((prev) => prev.slice(0, -1));
+                      socket.emit('crocodile:undo');
+                    }}
+                  />
+                </div>
+              )}
+              {crocMyWord && crocTurn?.explainerId === socket.id && (
+                <div className="croc-word-section croc-word-section--luxe">
+                  <div className="croc-word-label">Ваше слово</div>
+                  <div className="croc-word">{crocMyWord}</div>
+                </div>
+              )}
+            </div>
+          ) : (
           <GameLayoutWrapper
             gameType={room.gameType}
             room={room}
             socket={socket}
             players={players}
-           
           >
-            <div className={`game-area croc-game ${isCrocodileLuxeMode ? 'croc-luxe-main' : ''}`}>
-              {!isCrocodileLuxeMode && (
-                <>
-                  <div className="game-area-title">{crocodileFamilyTitle(room.gameType)}</div>
-                  <GameRulesDisclosure>
-                    <GameRulesBulletList items={getStaticHelp(room.gameType).bullets} />
-                  </GameRulesDisclosure>
-                </>
-              )}
+            <div className="game-area croc-game">
+              <>
+                <div className="game-area-title">{crocodileFamilyTitle(room.gameType)}</div>
+                <GameRulesDisclosure>
+                  <GameRulesBulletList items={getStaticHelp(room.gameType).bullets} />
+                </GameRulesDisclosure>
+              </>
               <div className="croc-explainer-strip">
                 <span className="croc-explainer-label">Объясняет</span>
                 <strong className="croc-explainer-name">{crocTurn?.explainerName || '—'}</strong>
@@ -3874,6 +3893,7 @@ correct:2`}
               )}
             </div>
           </GameLayoutWrapper>
+          )
         )}
 
         {/* Alias — объясни слово без однокоренных */}
@@ -7537,35 +7557,16 @@ correct:2`}
           </>
         )}
         {isCrocodileLuxeMode && (
-          <nav className="croc-luxe-bottom-nav">
-            <button
-              type="button"
-              onClick={() => {
-                crocGuessInputRef.current?.focus();
-              }}
-            >
-              <span>💬</span>
-              <b>Чат</b>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                if (crocTurn?.explainerId !== socket.id) {
-                  setActionStatus('Очистка доступна только рисующему.');
-                  return;
-                }
-                setCrocStrokes([]);
-                socket.emit('crocodile:clear');
-              }}
-            >
-              <span>🧽</span>
-              <b>Очистить</b>
-            </button>
-            <button type="button" className="danger" onClick={leaveRoomAndGoHome}>
-              <span>⎋</span>
-              <b>Выйти</b>
-            </button>
-          </nav>
+          <CrocodileLuxeBottomNav
+            onFocusChat={() => crocGuessInputRef.current?.focus()}
+            onClearCanvas={() => {
+              setCrocStrokes([]);
+              socket.emit('crocodile:clear');
+            }}
+            onLeave={leaveRoomAndGoHome}
+            canClear={crocTurn?.explainerId === socket.id}
+            toast={toast}
+          />
         )}
         {!isMafiaNoirMode && !isCrocodileLuxeMode && (
           <div className="room-exit-bar">

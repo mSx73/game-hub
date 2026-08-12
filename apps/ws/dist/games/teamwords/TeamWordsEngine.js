@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+import { isPlayerOnline, pruneOfflineFromMap } from '../../core/playerOnline.js';
 
 const WORD_SETS = {
   animals: ['Кошка', 'Собака', 'Лев', 'Слон', 'Тигр', 'Медведь', 'Обезьяна', 'Зебра', 'Жираф', 'Панда'],
@@ -35,7 +36,7 @@ export class TeamWordsEngine extends EventEmitter {
 
   start() {
     if (this._aborted) return;
-    const roomPlayers = (this.room?.players ?? []).filter((p) => !p.isSpectator);
+    const roomPlayers = (this.room?.players ?? []).filter((p) => !p.isSpectator && isPlayerOnline(p, this.room));
     for (const p of roomPlayers) {
       if (!this.players.has(p.id)) {
         this.addPlayer(p);
@@ -88,14 +89,15 @@ export class TeamWordsEngine extends EventEmitter {
   }
 
   setReady(playerId, ready) {
+    pruneOfflineFromMap(this.players, this.room);
     const player = this.players.get(playerId);
     if (player) {
       player.ready = ready;
       this.emit('player:ready', { playerId, ready });
-      
-      // Если все готовы и минимум 4 игрока (по 2 в команде)
-      const allReady = Array.from(this.players.values()).every(p => p.ready);
-      if (allReady && this.players.size >= 4 && this.state === 'waiting') {
+
+      const onlinePlayers = Array.from(this.players.values()).filter((p) => isPlayerOnline(p, this.room));
+      const allReady = onlinePlayers.length >= 4 && onlinePlayers.every((p) => p.ready);
+      if (allReady && this.state === 'waiting') {
         this.startGame();
       }
     }

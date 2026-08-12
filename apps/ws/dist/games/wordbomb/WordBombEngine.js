@@ -184,6 +184,15 @@ export class WordBombEngine extends EventEmitter {
     if (this._aborted) return;
     if (this.timer) clearInterval(this.timer);
 
+    const activeIds = new Set(
+      (this.room?.players ?? [])
+        .filter((p) => !p.isSpectator && p.isOnline !== false)
+        .map((p) => p.id),
+    );
+    if (activeIds.size > 0) {
+      this.players = this.players.filter((p) => activeIds.has(p.id));
+    }
+
     if (this.players.length === 0) {
       this.phase = 'finished';
       this.emit('game:ended', { winner: null, players: [], reason: 'no-players' });
