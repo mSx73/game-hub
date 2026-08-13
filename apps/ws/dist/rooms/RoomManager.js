@@ -1,4 +1,6 @@
 import { randomBytes } from 'crypto';
+import { remapPlayerIdDeep } from '../core/remapPlayerId.js';
+
 export class RoomManager {
   constructor(redis) {
     this.redis = redis;
@@ -60,7 +62,6 @@ export class RoomManager {
     const room = this.rooms.get(roomCode);
     if (!room) return { success: false, error: 'Комната не найдена' };
     if (room.status === 'finished') return { success: false, error: 'Игра завершена' };
-    if (room.status !== 'waiting' && !asSpectator) return { success: false, error: 'Игра уже началась' };
     if (room.password && room.password !== String(password || '')) {
       return { success: false, error: 'Неверный пароль комнаты' };
     }
@@ -87,7 +88,7 @@ export class RoomManager {
       return { success: true, room };
     }
 
-    // Если хост/игрок переподключился под новым socket.id с тем же именем — восстанавливаем его слот.
+    // Переподключение по имени — до проверки «игра уже началась», иначе рефреш блокирует rejoin.
     const reconnectByName = [...room.players, ...room.spectators]
       .filter((p) => p.name === safeName && !p.isOnline)
       .sort((a, b) => (b.lastActivity?.getTime() ?? 0) - (a.lastActivity?.getTime() ?? 0))[0];
@@ -119,11 +120,17 @@ export class RoomManager {
       room.updatedAt = new Date();
       this.persistRoomInternal(roomCode);
       const gameEngine = this.getGameEngine(roomCode);
-      if (gameEngine && typeof gameEngine.remapPlayerId === 'function') {
-        gameEngine.remapPlayerId(oldId, socketId);
+      if (gameEngine && oldId !== socketId) {
+        if (typeof gameEngine.remapPlayerId === 'function') {
+          gameEngine.remapPlayerId(oldId, socketId);
+        } else {
+          remapPlayerIdDeep(gameEngine, oldId, socketId);
+        }
       }
-      return { success: true, room };
+      return { success: true, room, reconnected: true, oldPlayerId: oldId };
     }
+
+    if (room.status !== 'waiting' && !asSpectator) return { success: false, error: 'Игра уже началась' };
 
     if (!asSpectator && room.players.length >= room.maxPlayers) {
       return { success: false, error: 'Комната заполнена' };

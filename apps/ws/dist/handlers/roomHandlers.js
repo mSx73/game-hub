@@ -2,6 +2,7 @@ import { createGameEngine } from '../GameFactory.js';
 import { HatEngine } from '../games/hat/HatEngine.js';
 import { sanitizeText, checkRateLimit } from '../utils/sanitize.js';
 import { parseQuizTxt, sanitizeNonMafiaSettingsForClients } from '../utils/quizPackParser.js';
+import { resyncGameState } from '../utils/resyncGameState.js';
 
 function toPublicRoom(room, viewerSocketId = null) {
   const isHost = viewerSocketId && room.hostId === viewerSocketId;
@@ -143,6 +144,9 @@ export function registerRoomHandlers(io, socket, roomManager) {
       io.to(result.room.code).emit('room:updated', toPublicRoom(result.room));
       const joinedPlayer = [...result.room.players, ...result.room.spectators].find((p) => p.id === socket.id);
       if (joinedPlayer) io.to(result.room.code).emit('room:player-joined', joinedPlayer);
+      if (result.reconnected && result.room.status === 'playing') {
+        resyncGameState(io, roomManager, result.room, socket.id);
+      }
     } catch (err) {
             callback({ success: false, error: err.message });
         }

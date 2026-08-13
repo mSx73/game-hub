@@ -1,4 +1,5 @@
 import { remapPlayerIdDeep } from './remapPlayerId.js';
+import { RoomManager } from '../rooms/RoomManager.js';
 import { FlagsEngine } from '../games/flags/FlagsEngine.js';
 import { StoryEngine } from '../games/story/StoryEngine.js';
 import { QuizEngine } from '../games/quiz/QuizEngine.js';
@@ -42,6 +43,37 @@ describe('remapPlayerIdDeep — рефреш не ломает игрока', ()
     expect(fake.ready.has('new')).toBe(true);
     expect(fake.order[0]).toBe('new');
     expect(fake.activeSpeaker).toBe('new');
+  });
+});
+
+describe('RoomManager — reconnect ремапит id в движке', () => {
+  test('joinRoom по имени вызывает remapPlayerIdDeep для generic-движков', () => {
+    const rm = new RoomManager(null);
+    const room = rm.createRoom('old_socket', 'Alice', 'quiz', {});
+    rm.setGameEngine(room.code, new QuizEngine(room));
+    room.status = 'playing';
+    room.players[0].isOnline = false;
+
+    const result = rm.joinRoom('new_socket', 'Alice', room.code);
+    expect(result.success).toBe(true);
+    expect(result.reconnected).toBe(true);
+
+    const engine = rm.getGameEngine(room.code);
+    expect(engine.players.find((p) => p.id === 'new_socket')).toBeTruthy();
+    expect(engine.players.find((p) => p.id === 'old_socket')).toBeFalsy();
+    engine.cleanup();
+  });
+
+  test('reconnect во время playing не блокируется guard «игра уже началась»', () => {
+    const rm = new RoomManager(null);
+    const room = rm.createRoom('old_socket', 'Bob', 'quiz', {});
+    room.status = 'playing';
+    room.players[0].isOnline = false;
+
+    const result = rm.joinRoom('fresh_socket', 'Bob', room.code);
+    expect(result.success).toBe(true);
+    expect(result.reconnected).toBe(true);
+    expect(room.players[0].id).toBe('fresh_socket');
   });
 });
 
@@ -129,6 +161,7 @@ describe('PasswordEngine — оффлайн пропускается в рота
   });
 });
 
+describe('StoryEngine — оффлайн и disconnect', () => {
   test('noTimeLimit: handlePlayerDisconnect передаёт ход', () => {
     const room = mkRoom(3, { settings: { noTimeLimit: true, maxStories: 1 } });
     const g = new StoryEngine(room);
