@@ -1,0 +1,79 @@
+/* Modern — clean neutral dark theme */
+:root.theme-modern,
+[data-theme='modern'] {
+  --primary: #7c5cfc;
+  --secondary: #00d4aa;
+  --accent: #7c5cfc;
+  --bg-deep: #0b0e14;
+  --surface: #151a24;
+  --text-primary: #f0f0f5;
+  --text-muted: #7878a0;
+
+  --color-primary-400: #9065fc;
+  --color-primary-500: #7c5cfc;
+  --color-primary-600: #6b3de8;
+
+  --color-bg-primary: #0b0e14;
+  --color-bg-secondary: #111520;
+  --color-bg-tertiary: #181d2a;
+  --color-bg-elevated: #151a24;
+  --color-bg-overlay: rgba(11, 14, 20, 0.85);
+  --color-bg-modal: rgba(11, 14, 20, 0.96);
+
+  --color-surface-100: #151a24;
+  --color-surface-200: #1c2130;
+  --color-surface-300: #252c3d;
+
+  --color-text-primary: #f0f0f5;
+  --color-text-secondary: #b0b0c0;
+  --color-text-tertiary: #7878a0;
+  --color-text-muted: #55556e;
+
+  --color-border-subtle: rgba(255, 255, 255, 0.06);
+  --color-border-default: rgba(255, 255, 255, 0.10);
+  --color-border-accent: rgba(124, 92, 252, 0.35);
+  --color-border-focus: rgba(124, 92, 252, 0.65);
+
+  --color-mafia-red: #ef4444;
+  --color-success-500: #10b981;
+  --color-info-500: #3b82f6;
+  --color-warning-500: #f59e0b;
+
+  --font-display: 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-logo: 'Inter', system-ui, sans-serif;
+  --tracking-tight: -0.02em;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-2xl: 22px;
+
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme='modern'] body::before {
+  background:
+    radial-gradient(ellipse 120% 70% at 0% 0%, rgba(124, 92, 252, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 100% 80% at 100% 100%, rgba(0, 212, 170, 0.08) 0%, transparent 60%),
+    linear-gradient(180deg, #0b0e14 0%, #0e1118 100%);
+}
+
+[data-theme='modern'] .game-area,
+[data-theme='modern'] .chat,
+[data-theme='modern'] .players,
+[data-theme='modern'] .game-hud {
+  background: var(--color-surface-100);
+  border-color: var(--color-border-subtle);
+  box-shadow: none;
+}
+
+[data-theme='modern'] .btn.btn-sm {
+  border-radius: var(--radius-md);
+}
+
+[data-theme='modern'] .phase {
+  letter-spacing: var(--tracking-tight);
+}
