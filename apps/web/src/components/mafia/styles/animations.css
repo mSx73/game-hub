@@ -1,0 +1,155 @@
+/* MafiaGameTable — Keyframes v3 */
+
+/* === Phase atmosphere === */
+@keyframes night-breathing {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; }
+}
+
+@keyframes star-twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.4); }
+}
+
+@keyframes voting-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes day-glow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* === Player states === */
+@keyframes poison-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px #9c27b0, 0 0 20px rgba(156, 39, 176, 0.4); }
+  50% { box-shadow: 0 0 0 3px #ce93d8, 0 0 30px rgba(156, 39, 176, 0.65); }
+}
+
+@keyframes target-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px #EF2D56, 0 0 20px rgba(239, 45, 86, 0.45); }
+  50% { box-shadow: 0 0 0 3px #ff6b8a, 0 0 36px rgba(239, 45, 86, 0.75); }
+}
+
+@keyframes putanaGlow {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.45), 0 0 12px rgba(236, 72, 153, 0.2); }
+  50% { box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.8), 0 0 22px rgba(236, 72, 153, 0.4); }
+}
+
+@keyframes self-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(124, 92, 252, 0.5), 0 0 18px rgba(124, 92, 252, 0.18); }
+  50% { box-shadow: 0 0 0 3px rgba(124, 92, 252, 0.8), 0 0 28px rgba(124, 92, 252, 0.32); }
+}
+
+/* === Timer === */
+@keyframes timer-urgent-pulse {
+  0%, 100% { filter: drop-shadow(0 0 6px #EF2D56); }
+  50% { filter: drop-shadow(0 0 20px #EF2D56); }
+}
+
+@keyframes timer-urgent-bg {
+  0%, 100% { background: rgba(239, 45, 86, 0.06); }
+  50% { background: rgba(239, 45, 86, 0.15); }
+}
+
+/* === Role Card === */
+@keyframes holographic-shift {
+  0% { transform: translateX(-150%) skewX(-15deg); }
+  100% { transform: translateX(150%) skewX(-15deg); }
+}
+
+@keyframes card-entrance {
+  0% { transform: perspective(800px) rotateY(-90deg) scale(0.7); opacity: 0; }
+  60% { transform: perspective(800px) rotateY(8deg) scale(1.02); opacity: 1; }
+  100% { transform: perspective(800px) rotateY(0deg) scale(1); }
+}
+
+/* === Death Reveal === */
+@keyframes cracks-appear {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes crack-line {
+  0% { clip-path: polygon(50% 50%, 50% 50%, 50% 50%); opacity: 0; }
+  50% { opacity: 0.7; }
+  100% { clip-path: polygon(50% 0%, 0% 100%, 100% 100%); opacity: 0; }
+}
+
+@keyframes death-shatter {
+  0% { transform: translateY(0) rotateX(0deg) scale(1); opacity: 1; }
+  30% { transform: translateY(-8px) rotateX(-12deg) scale(1.05); }
+  100% { transform: translateY(200px) rotateX(75deg) scale(0.6); opacity: 0; }
+}
+
+@keyframes death-bg-flash {
+  0% { background: rgba(239, 45, 86, 0); }
+  15% { background: rgba(239, 45, 86, 0.12); }
+  100% { background: rgba(239, 45, 86, 0); }
+}
+
+/* === Phase overlay === */
+@keyframes stars-drift {
+  0% { transform: translateY(0) translateX(0); }
+  100% { transform: translateY(-20px) translateX(8px); }
+}
+
+/* === Chat === */
+@keyframes message-fade-in {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* === Misc === */
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes badge-pop {
+  0% { transform: scale(0); }
+  70% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* === Rainbow mode (Easter egg) === */
+.mafia-table-container.rainbow-mode .player-seat.alive .player-avatar {
+  animation: rainbow-glow 3s linear infinite;
+}
+
+@keyframes rainbow-glow {
+  0%   { box-shadow: 0 0 28px rgba(255, 0, 0, 0.7); }
+  16%  { box-shadow: 0 0 28px rgba(255, 127, 0, 0.7); }
+  33%  { box-shadow: 0 0 28px rgba(255, 255, 0, 0.7); }
+  50%  { box-shadow: 0 0 28px rgba(0, 255, 0, 0.7); }
+  66%  { box-shadow: 0 0 28px rgba(0, 127, 255, 0.7); }
+  83%  { box-shadow: 0 0 28px rgba(139, 0, 255, 0.7); }
+  100% { box-shadow: 0 0 28px rgba(255, 0, 0, 0.7); }
+}
+
+@keyframes phase-badge-in {
+  0% { transform: scale(0.7) translateY(-8px); opacity: 0; }
+  60% { transform: scale(1.04) translateY(1px); opacity: 1; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+@keyframes vote-bar-grow {
+  from { width: 0; }
+}
+
+@keyframes result-reveal {
+  0% { opacity: 0; transform: scale(0.5) rotate(-8deg); }
+  60% { transform: scale(1.08) rotate(2deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes speaking-ring {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+}

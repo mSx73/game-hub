@@ -1,0 +1,234 @@
+import { remapPlayerIdDeep } from './remapPlayerId.js';
+import { RoomManager } from '../rooms/RoomManager.js';
+import { FlagsEngine } from '../games/flags/FlagsEngine.js';
+import { StoryEngine } from '../games/story/StoryEngine.js';
+import { QuizEngine } from '../games/quiz/QuizEngine.js';
+import { AliasEngine } from '../games/alias/AliasEngine.js';
+import { CrocodileEngine } from '../games/crocodile/CrocodileEngine.js';
+import { WordBombEngine } from '../games/wordbomb/WordBombEngine.js';
+
+const mkRoom = (n, extra = {}) => ({
+  code: 'TEST',
+  settings: {},
+  players: Array.from({ length: n }, (_, i) => ({
+    id: 'p' + i, name: 'P' + i, isOnline: true, isSpectator: false,
+  })),
+  spectators: [],
+  ...extra,
+});
+
+describe('remapPlayerIdDeep — рефреш не ломает игрока', () => {
+  test('Quiz: после remap игрок может отвечать новым id, счёт сохраняется', () => {
+    const g = new QuizEngine(mkRoom(2));
+    g.start();
+    g.submitAnswer('p0', g.currentQuestion.correct); // старый id отвечает
+    remapPlayerIdDeep(g, 'p1', 'NEW_SOCKET_ID_abc123');
+    expect(g.players.find((p) => p.id === 'NEW_SOCKET_ID_abc123')).toBeTruthy();
+    expect(g.players.find((p) => p.id === 'p1')).toBeFalsy();
+    const ok = g.submitAnswer('NEW_SOCKET_ID_abc123', 0);
+    expect(ok).toBe(true); // новый id принят
+    g.cleanup();
+  });
+
+  test('Map-ключи и значения, Set и массивы строк ремапятся', () => {
+    const fake = {
+      players: [{ id: 'old' }],
+      votes: new Map([['old', 'x'], ['y', 'old']]),
+      ready: new Set(['old', 'z']),
+      order: ['old', 'q'],
+      activeSpeaker: 'old',
+    };
+    remapPlayerIdDeep(fake, 'old', 'new');
+    expect(fake.players[0].id).toBe('new');
+    expect(fake.votes.has('new')).toBe(true);
+    expect(fake.votes.get('y')).toBe('new');
+    expect(fake.ready.has('new')).toBe(true);
+    expect(fake.order[0]).toBe('new');
+    expect(fake.activeSpeaker).toBe('new');
+  });
+});
+
+describe('RoomManager — reconnect ремапит id в движке', () => {
+  test('joinRoom по имени вызывает remapPlayerIdDeep для generic-движков', () => {
+    const rm = new RoomManager(null);
+    const room = rm.createRoom('old_socket', 'Alice', 'quiz', {});
+    rm.setGameEngine(room.code, new QuizEngine(room));
+    room.status = 'playing';
+    room.players[0].isOnline = false;
+
+    const result = rm.joinRoom('new_socket', 'Alice', room.code);
+    expect(result.success).toBe(true);
+    expect(result.reconnected).toBe(true);
+
+    const engine = rm.getGameEngine(room.code);
+    expect(engine.players.find((p) => p.id === 'new_socket')).toBeTruthy();
+    expect(engine.players.find((p) => p.id === 'old_socket')).toBeFalsy();
+    engine.cleanup();
+  });
+
+  test('reconnect во время playing не блокируется guard «игра уже началась»', () => {
+    const rm = new RoomManager(null);
+    const room = rm.createRoom('old_socket', 'Bob', 'quiz', {});
+    room.status = 'playing';
+    room.players[0].isOnline = false;
+
+    const result = rm.joinRoom('fresh_socket', 'Bob', room.code);
+    expect(result.success).toBe(true);
+    expect(result.reconnected).toBe(true);
+    expect(room.players[0].id).toBe('fresh_socket');
+  });
+});
+
+describe('FlagsEngine — нет двойных очков после угадывания', () => {
+  test('второй правильный ответ в паузе отклоняется, endRound не дублируется', () => {
+    const g = new FlagsEngine(mkRoom(2));
+    g.start();
+    const country = g.currentFlag.country;
+    let roundEnded = 0;
+    g.on('round:ended', () => roundEnded++);
+    g.handleChat('p0', country);
+    const scoreAfterFirst = g.players.find((p) => p.id === 'p0').score;
+    expect(scoreAfterFirst).toBeGreaterThan(0);
+    // фаза сменилась — поздний дубль не проходит
+    expect(g.phase).toBe('reveal');
+    g.handleChat('p1', country);
+    expect(g.players.find((p) => p.id === 'p1').score).toBe(0);
+    expect(roundEnded).toBe(1);
+    g.cleanup();
+  });
+});
+
+describe('AliasEngine — оффлайн игроки не остаются в ротации', () => {
+  test('nextTurn удаляет игрока с isOnline=false из this.players', () => {
+    const room = mkRoom(3);
+    room.players[1].isOnline = false;
+    const g = new AliasEngine(room);
+    g.words = ['яблоко', 'груша', 'слива'];
+    g.dictionaryLoaded = true;
+    g.players = [
+      { id: 'p0', name: 'P0', score: 0 },
+      { id: 'p1', name: 'P1', score: 0 },
+      { id: 'p2', name: 'P2', score: 0 },
+    ];
+    g.nextTurn();
+    expect(g.players.some((p) => p.id === 'p1')).toBe(false);
+    expect(g.players).toHaveLength(2);
+    g.cleanup();
+  });
+});
+
+describe('CrocodileEngine / WordBombEngine — turn order after offline filter', () => {
+  test('Crocodile nextTurn keeps scheduled explainer when another player is offline', () => {
+    const room = mkRoom(3);
+    room.players[1].isOnline = false;
+    const g = new CrocodileEngine({ ...room, gameType: 'crocodile' });
+    g.players = [
+      { id: 'p0', name: 'P0', score: 0 },
+      { id: 'p1', name: 'P1', score: 0 },
+      { id: 'p2', name: 'P2', score: 0 },
+    ];
+    g.words = ['a', 'b', 'c', 'd', 'e'];
+    g.currentPlayerIndex = 2;
+    let explainerId;
+    g.on('word:choices', (d) => { explainerId = d.playerId; });
+    g.nextTurn();
+    expect(explainerId).toBe('p2');
+    g.cleanup();
+  });
+
+  test('WordBomb nextTurn keeps scheduled explainer when another player is offline', () => {
+    const room = mkRoom(3);
+    room.players[1].isOnline = false;
+    const g = new WordBombEngine(room);
+    g.wordBank = [{ word: 'A', mines: [] }, { word: 'B', mines: [] }, { word: 'C', mines: [] }];
+    g.dictionaryLoaded = true;
+    g.players = [
+      { id: 'p0', name: 'P0', score: 0 },
+      { id: 'p1', name: 'P1', score: 0 },
+      { id: 'p2', name: 'P2', score: 0 },
+    ];
+    g.currentPlayerIndex = 2;
+    let explainerId;
+    g.on('turn:started', (d) => { explainerId = d.explainerId; });
+    g.nextTurn();
+    expect(explainerId).toBe('p2');
+    g.cleanup();
+  });
+});
+
+describe('SpyEngine — ничья в голосовании', () => {
+  test('при ничьей шпион ускользает (никто не обвинён)', () => {
+    const { SpyEngine } = require('../games/spy/SpyEngine.js');
+    const g = new SpyEngine(mkRoom(4));
+    g.start();
+    g.phase = 'voting';
+    const results = [];
+    g.on('voting:ended', (d) => results.push(d));
+    // 2:2 — p0/p1 против p2, p2/p3 против p0
+    g.vote('p0', 'p2'); g.vote('p1', 'p2');
+    g.vote('p2', 'p0'); g.vote('p3', 'p0');
+    expect(results).toHaveLength(1);
+    expect(results[0].tie).toBe(true);
+    expect(results[0].accused).toBeNull();
+    expect(results[0].spyCaught).toBe(false);
+    g.cleanup();
+  });
+});
+
+describe('SyncEngine — оффлайн не блокирует ready', () => {
+  test('setReady игнорирует оффлайновых при проверке allReady', () => {
+    const { SyncEngine } = require('../games/sync/SyncEngine.js');
+    const room = mkRoom(3);
+    room.players[2].isOnline = false;
+    const g = new SyncEngine(room);
+    g.start();
+    g.setReady('p0', true);
+    g.setReady('p1', true);
+    expect(g.state).toBe('countdown');
+    g.cleanup();
+  });
+});
+
+describe('PasswordEngine — оффлайн пропускается в ротации ведущего', () => {
+  test('nextClueGiver не возвращает оффлайн id', () => {
+    const { PasswordEngine } = require('../games/password/PasswordEngine.js');
+    const room = mkRoom(3);
+    const g = new PasswordEngine(room);
+    g.start();
+    room.players[0].isOnline = false;
+    g.clueGiverId = 'p0';
+    expect(g.nextClueGiver()).toBe('p1');
+    g.cleanup();
+  });
+});
+
+describe('StoryEngine — оффлайн и disconnect', () => {
+  test('noTimeLimit: handlePlayerDisconnect передаёт ход', () => {
+    const room = mkRoom(3, { settings: { noTimeLimit: true, maxStories: 1 } });
+    const g = new StoryEngine(room);
+    jest.useFakeTimers();
+    g.start();
+    jest.advanceTimersByTime(2100); // задержка перед startTurn
+    expect(g.phase).toBe('turn');
+    const current = g.players[g.currentTurnIndex];
+    // эмулируем RoomManager.handleDisconnect
+    current.isOnline = false;
+    g.handlePlayerDisconnect(current.id);
+    // ход ушёл дальше, а не завис
+    expect(g.currentTurnIndex).toBeGreaterThan(0);
+    g.cleanup();
+    jest.useRealTimers();
+  });
+
+  test('startTurn пропускает оффлайновых', () => {
+    const room = mkRoom(3, { settings: { noTimeLimit: true, maxStories: 1 } });
+    room.players[0].isOnline = false; // первый оффлайн ещё до старта
+    const g = new StoryEngine(room);
+    jest.useFakeTimers();
+    g.start();
+    jest.advanceTimersByTime(2100);
+    expect(g.players[g.currentTurnIndex].id).toBe('p1'); // p0 пропущен
+    g.cleanup();
+    jest.useRealTimers();
+  });
+});
