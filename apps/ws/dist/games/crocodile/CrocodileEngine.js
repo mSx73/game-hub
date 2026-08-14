@@ -72,6 +72,7 @@ export class CrocodileEngine extends BaseGame {
         .filter(p => !p.isSpectator && p.isOnline !== false)
         .map(p => p.id),
     );
+    const nextExplainerId = this.players[this.currentPlayerIndex]?.id;
     if (activeIds.size > 0) {
       this.players = this.players.filter(p => activeIds.has(p.id));
     }
@@ -80,7 +81,14 @@ export class CrocodileEngine extends BaseGame {
       this.emit('game:ended', { winner: null, players: [], reason: 'no_players' });
       return;
     }
-    if (this.currentPlayerIndex >= this.players.length) {
+    if (nextExplainerId) {
+      const idx = this.players.findIndex(p => p.id === nextExplainerId);
+      if (idx >= 0) {
+        this.currentPlayerIndex = idx;
+      } else if (this.currentPlayerIndex >= this.players.length) {
+        this.currentPlayerIndex = 0;
+      }
+    } else if (this.currentPlayerIndex >= this.players.length) {
       this.currentPlayerIndex = 0;
     }
 

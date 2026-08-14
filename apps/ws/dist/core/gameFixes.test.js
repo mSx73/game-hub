@@ -4,6 +4,8 @@ import { FlagsEngine } from '../games/flags/FlagsEngine.js';
 import { StoryEngine } from '../games/story/StoryEngine.js';
 import { QuizEngine } from '../games/quiz/QuizEngine.js';
 import { AliasEngine } from '../games/alias/AliasEngine.js';
+import { CrocodileEngine } from '../games/crocodile/CrocodileEngine.js';
+import { WordBombEngine } from '../games/wordbomb/WordBombEngine.js';
 
 const mkRoom = (n, extra = {}) => ({
   code: 'TEST',
@@ -111,6 +113,45 @@ describe('AliasEngine — оффлайн игроки не остаются в �
     g.nextTurn();
     expect(g.players.some((p) => p.id === 'p1')).toBe(false);
     expect(g.players).toHaveLength(2);
+    g.cleanup();
+  });
+});
+
+describe('CrocodileEngine / WordBombEngine — turn order after offline filter', () => {
+  test('Crocodile nextTurn keeps scheduled explainer when another player is offline', () => {
+    const room = mkRoom(3);
+    room.players[1].isOnline = false;
+    const g = new CrocodileEngine({ ...room, gameType: 'crocodile' });
+    g.players = [
+      { id: 'p0', name: 'P0', score: 0 },
+      { id: 'p1', name: 'P1', score: 0 },
+      { id: 'p2', name: 'P2', score: 0 },
+    ];
+    g.words = ['a', 'b', 'c', 'd', 'e'];
+    g.currentPlayerIndex = 2;
+    let explainerId;
+    g.on('word:choices', (d) => { explainerId = d.playerId; });
+    g.nextTurn();
+    expect(explainerId).toBe('p2');
+    g.cleanup();
+  });
+
+  test('WordBomb nextTurn keeps scheduled explainer when another player is offline', () => {
+    const room = mkRoom(3);
+    room.players[1].isOnline = false;
+    const g = new WordBombEngine(room);
+    g.wordBank = [{ word: 'A', mines: [] }, { word: 'B', mines: [] }, { word: 'C', mines: [] }];
+    g.dictionaryLoaded = true;
+    g.players = [
+      { id: 'p0', name: 'P0', score: 0 },
+      { id: 'p1', name: 'P1', score: 0 },
+      { id: 'p2', name: 'P2', score: 0 },
+    ];
+    g.currentPlayerIndex = 2;
+    let explainerId;
+    g.on('turn:started', (d) => { explainerId = d.explainerId; });
+    g.nextTurn();
+    expect(explainerId).toBe('p2');
     g.cleanup();
   });
 });

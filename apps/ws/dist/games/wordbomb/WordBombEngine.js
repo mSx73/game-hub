@@ -189,6 +189,7 @@ export class WordBombEngine extends EventEmitter {
         .filter((p) => !p.isSpectator && p.isOnline !== false)
         .map((p) => p.id),
     );
+    const nextExplainerId = this.players[this.currentPlayerIndex]?.id;
     if (activeIds.size > 0) {
       this.players = this.players.filter((p) => activeIds.has(p.id));
     }
@@ -198,7 +199,14 @@ export class WordBombEngine extends EventEmitter {
       this.emit('game:ended', { winner: null, players: [], reason: 'no-players' });
       return;
     }
-    if (!Number.isInteger(this.currentPlayerIndex) || this.currentPlayerIndex >= this.players.length) {
+    if (nextExplainerId) {
+      const idx = this.players.findIndex((p) => p.id === nextExplainerId);
+      if (idx >= 0) {
+        this.currentPlayerIndex = idx;
+      } else if (!Number.isInteger(this.currentPlayerIndex) || this.currentPlayerIndex >= this.players.length) {
+        this.currentPlayerIndex = 0;
+      }
+    } else if (!Number.isInteger(this.currentPlayerIndex) || this.currentPlayerIndex >= this.players.length) {
       this.currentPlayerIndex = 0;
     }
     const explainer = this.players[this.currentPlayerIndex];
