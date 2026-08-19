@@ -173,6 +173,14 @@ export class RoomManager {
         return null;
       }
     }
+    const gameEngine = this.getGameEngine(code);
+    if (gameEngine) {
+      if (typeof gameEngine.removePlayer === 'function') {
+        gameEngine.removePlayer(socketId);
+      } else if (typeof gameEngine.handlePlayerDisconnect === 'function') {
+        gameEngine.handlePlayerDisconnect(socketId);
+      }
+    }
     this.playerToRoom.delete(socketId);
     room.updatedAt = new Date();
     this.persistRoomInternal(code);

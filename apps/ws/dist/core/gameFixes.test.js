@@ -114,6 +114,18 @@ describe('SyncEngine — оффлайн не блокирует ready', () => {
     expect(g.state).toBe('countdown');
     g.cleanup();
   });
+
+  test('setReady игнорирует игрока, покинувшего комнату (room:leave)', () => {
+    const { SyncEngine } = require('../games/sync/SyncEngine.js');
+    const room = mkRoom(3);
+    const g = new SyncEngine(room);
+    g.start();
+    room.players = room.players.filter((p) => p.id !== 'p2');
+    g.setReady('p0', true);
+    g.setReady('p1', true);
+    expect(g.state).toBe('countdown');
+    g.cleanup();
+  });
 });
 
 describe('PasswordEngine — оффлайн пропускается в ротации ведущего', () => {
@@ -129,6 +141,7 @@ describe('PasswordEngine — оффлайн пропускается в рота
   });
 });
 
+describe('StoryEngine — noTimeLimit не зависает при disconnect', () => {
   test('noTimeLimit: handlePlayerDisconnect передаёт ход', () => {
     const room = mkRoom(3, { settings: { noTimeLimit: true, maxStories: 1 } });
     const g = new StoryEngine(room);
@@ -139,6 +152,7 @@ describe('PasswordEngine — оффлайн пропускается в рота
     const current = g.players[g.currentTurnIndex];
     // эмулируем RoomManager.handleDisconnect
     current.isOnline = false;
+    room.players.find((p) => p.id === current.id).isOnline = false;
     g.handlePlayerDisconnect(current.id);
     // ход ушёл дальше, а не завис
     expect(g.currentTurnIndex).toBeGreaterThan(0);

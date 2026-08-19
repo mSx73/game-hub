@@ -103,6 +103,12 @@ export class StoryEngine extends EventEmitter {
 
   startTurn() {
     if (this._aborted) return;
+    while (this.currentTurnIndex < this.players.length) {
+      const candidate = this.players[this.currentTurnIndex];
+      const rp = this.room?.players?.find((p) => p.id === candidate.id);
+      if (rp && rp.isOnline !== false) break;
+      this.currentTurnIndex++;
+    }
     if (this.currentTurnIndex >= this.players.length) {
       this.completeStory();
       return;
@@ -222,6 +228,26 @@ export class StoryEngine extends EventEmitter {
       clearInterval(this.timer);
       this.timer = null;
     }
+  }
+
+  handlePlayerDisconnect(playerId) {
+    if (this._aborted || this.phase !== 'turn') return;
+    const current = this.players[this.currentTurnIndex];
+    if (!current || current.id !== playerId) return;
+    this.skipCurrentTurn(current);
+  }
+
+  skipCurrentTurn(player) {
+    this.stopTimer();
+    this.currentStory.push({ text: '...', author: player.id, authorName: player.name });
+    this.emit('sentence:submitted', {
+      playerId: player.id,
+      playerName: player.name,
+      sentence: '...',
+      skipped: true,
+    });
+    this.currentTurnIndex++;
+    this.startTurn();
   }
 
   cleanup() {
