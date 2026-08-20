@@ -634,7 +634,11 @@ export function registerNewGamesHandler(io, socket, roomManager, gameManager = n
         if (gameType === 'teamwords' && engine.handleGuess) engine.handleGuess(socket.id, action.guess ?? action.text);
         break;
       case 'skip-word':
-        if (gameType === 'teamwords' && engine.handleSkip) engine.handleSkip();
+        if (gameType === 'teamwords' && engine.handleSkip) {
+          const ok = engine.handleSkip(socket.id);
+          callback?.({ success: ok, error: ok ? undefined : 'Пропуск доступен только объясняющему' });
+          return;
+        }
         break;
     }
     callback?.({ success: true });

@@ -141,6 +141,22 @@ describe('PasswordEngine — оффлайн пропускается в рота
   });
 });
 
+describe('TeamWordsEngine — skip-word только для объясняющего', () => {
+  test('handleSkip отклоняет игрока не из роли explainer', () => {
+    const { TeamWordsEngine } = require('../games/teamwords/TeamWordsEngine.js');
+    const room = mkRoom(4);
+    const g = new TeamWordsEngine(room);
+    g.start();
+    for (const p of room.players) g.setReady(p.id, true);
+    expect(g.state).toBe('explaining');
+    const explainer = g.currentExplainer;
+    const opponent = room.players.find((p) => p.id !== explainer);
+    expect(g.handleSkip(opponent.id)).toBe(false);
+    expect(g.handleSkip(explainer)).toBe(true);
+    g.cleanup();
+  });
+});
+
 describe('StoryEngine — noTimeLimit не зависает при disconnect', () => {
   test('noTimeLimit: handlePlayerDisconnect передаёт ход', () => {
     const room = mkRoom(3, { settings: { noTimeLimit: true, maxStories: 1 } });

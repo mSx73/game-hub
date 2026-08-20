@@ -218,9 +218,10 @@ export class TeamWordsEngine extends EventEmitter {
     return false;
   }
 
-  handleSkip() {
+  handleSkip(playerId) {
     if (this.state !== 'explaining' || this.wordSet.length === 0) return false;
-    
+    if (!playerId || playerId !== this.currentExplainer) return false;
+
     this.skippedWords.push(this.currentWord);
     this.emit('word:skipped', {
       word: this.currentWord,
