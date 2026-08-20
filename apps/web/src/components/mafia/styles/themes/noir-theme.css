@@ -1,0 +1,62 @@
+/* Noir theme — deep black & white with crimson accents */
+
+.mafia-table-container.theme-noir .mafia-table {
+  background:
+    radial-gradient(ellipse 100% 100% at 50% 50%, rgba(16, 16, 20, 0.96) 0%, #06060a 70%),
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 60%);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 0 80px rgba(0, 0, 0, 0.8),
+    inset 0 0 60px rgba(0, 0, 0, 0.4);
+}
+
+.mafia-table-container.theme-noir .player-seat.alive .player-avatar {
+  --border-color: rgba(255, 255, 255, 0.5);
+  --glow-color: rgba(255, 255, 255, 0.1);
+}
+
+.mafia-table-container.theme-noir .player-seat.targeted .player-avatar {
+  --border-color: #c41e3a;
+  --glow-color: rgba(196, 30, 58, 0.35);
+}
+
+.mafia-table-container.theme-noir .phase-overlay.night {
+  background:
+    radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
+    transparent;
+}
+
+.mafia-table-container.theme-noir .phase-overlay.voting {
+  background: radial-gradient(ellipse at 50% 50%, rgba(196, 30, 58, 0.05) 0%, transparent 70%);
+}
+
+.mafia-table-container.theme-noir .timer-progress {
+  stroke: rgba(255, 255, 255, 0.7);
+}
+
+.mafia-table-container.theme-noir .mafia-action-panel,
+.mafia-table-container.theme-noir .vote-booth {
+  background: rgba(8, 8, 10, 0.97);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.mafia-table-container.theme-noir .mafia-chat {
+  background: rgba(8, 8, 10, 0.97);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.mafia-table-container.theme-noir .mafia-message {
+  background: rgba(255, 255, 255, 0.04);
+  border-left-color: rgba(255, 255, 255, 0.2);
+}
+
+.mafia-table-container.theme-noir .mafia-player-card {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.mafia-table-container.theme-noir .vote-candidate:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
+}

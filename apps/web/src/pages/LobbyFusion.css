@@ -1,0 +1,416 @@
+/* ============================================================
+   LobbyFusion — редизайн лобби (экран ожидания)
+   Заскоуплено под .room-page--lobby, цвет берётся из --accent игры.
+   Импортируется последним → выигрывает каскад.
+   ============================================================ */
+
+.room-page--lobby {
+  --acc: var(--accent, #7c5cfc);
+  --acc2: var(--accent-2, #5a2ec4);
+  padding-top: 24px;
+}
+
+/* ---------- Сетка: приглашение/инфо слева, игроки справа ---------- */
+.room-page--lobby .room-content-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.62fr);
+  gap: var(--space-6);
+  max-width: 1080px;
+  margin: 0 auto;
+}
+@media (max-width: 860px) {
+  .room-page--lobby .room-content-grid { grid-template-columns: 1fr; }
+  .room-page--lobby .room-side-stack { position: static; grid-row: auto; }
+}
+
+/* ---------- ПРИГЛАШЕНИЕ (room-id-container) ---------- */
+.room-page--lobby .room-id-container {
+  max-width: 760px;
+  margin: 0 auto 18px;
+  padding: clamp(22px, 4vw, 34px) 24px !important;
+  border-radius: 26px;
+  background:
+    radial-gradient(680px 280px at 50% -50%, color-mix(in srgb, var(--acc) 32%, transparent), transparent 70%),
+    var(--color-surface-100);
+  border: 1px solid color-mix(in srgb, var(--acc) 28%, transparent);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45),
+              inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+.room-page--lobby .room-id-container::before { display: none !important; }
+.room-page--lobby [data-testid="room-title"] {
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary) !important;
+  margin: 0 0 14px !important;
+}
+.room-page--lobby [data-testid="room-title"]::before {
+  content: '🎮  ';
+}
+
+/* ---------- Глобально для ИГРОВЫХ экранов (не лобби) ---------- */
+/* Бейдж «копировать» на коде — только в лобби, в игре ломал компактный код */
+.room-page:not(.room-page--lobby) .room-id-copy-badge { display: none; }
+.room-page:not(.room-page--lobby) .room-id { cursor: pointer; white-space: nowrap; }
+/* «Выйти в меню» — ВЕЗДЕ статично под контентом, а не поверх него
+   (fixed-кнопка перекрывала формы и ленты на игровых экранах) */
+.room-exit-bar {
+  position: static !important;
+  transform: none !important;
+  margin: 18px auto 10px;
+}
+.room-page:not(.room-page--lobby) .room-exit-bar .btn {
+  min-width: 0;
+  padding: 8px 14px;
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+.room-page:not(.room-page--lobby) .room-exit-bar .btn:hover { opacity: 1; }
+
+/* Панель ведущего в игре — компактная строка (была огромным пустым блоком) */
+.room-page:not(.room-page--lobby) .host-control-panel {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 16px !important;
+  margin: 0 0 12px !important;
+}
+.room-page:not(.room-page--lobby) .host-control-panel__hint { display: none; }
+.room-page:not(.room-page--lobby) .host-control-panel__title {
+  font-size: 0.85rem !important;
+  margin: 0 !important;
+}
+.room-page:not(.room-page--lobby) .host-control-panel__header {
+  display: flex; align-items: center; gap: 8px; margin: 0 !important;
+}
+.room-page:not(.room-page--lobby) .host-control-panel__actions { margin: 0 !important; }
+.room-page:not(.room-page--lobby) .host-control-panel__btn-danger {
+  padding: 8px 16px !important;
+  font-size: 0.8rem !important;
+}
+
+/* Подводка над кодом */
+.room-page--lobby .room-invite-kicker {
+  margin: -6px 0 16px !important;
+  font-size: 1.02rem;
+  font-weight: 700;
+  background: linear-gradient(100deg, var(--acc), color-mix(in srgb, var(--acc) 40%, #fff));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Большой код-комнаты — теперь кнопка: клик копирует */
+.room-page--lobby .room-id {
+  position: relative;
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.035) !important;
+  border: 1.5px dashed color-mix(in srgb, var(--acc) 50%, transparent) !important;
+  border-radius: 18px !important;
+  color: #fff !important;
+  font-family: var(--font-mono), monospace !important;
+  font-size: clamp(2.4rem, 9vw, 3.6rem) !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  letter-spacing: 0.22em !important;
+  padding: 22px 8px 30px 0.22em !important;
+  margin: 0 auto 18px !important;
+  max-width: 440px;
+  text-shadow: 0 0 32px color-mix(in srgb, var(--acc) 45%, transparent);
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.room-page--lobby .room-id:hover {
+  transform: translateY(-2px);
+  border-color: var(--acc) !important;
+  background: color-mix(in srgb, var(--acc) 8%, transparent) !important;
+}
+.room-page--lobby .room-id--copied {
+  border-style: solid !important;
+  border-color: #4ade80 !important;
+}
+.room-page--lobby .room-id-copy-badge {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  text-shadow: none;
+  transition: color 0.15s ease;
+}
+.room-page--lobby .room-id:hover .room-id-copy-badge { color: color-mix(in srgb, var(--acc) 85%, white); }
+.room-page--lobby .room-id--copied .room-id-copy-badge { color: #4ade80; }
+
+/* Подсказка под кнопками */
+.room-page--lobby .room-invite-hint {
+  margin: 14px auto 0 !important;
+  font-size: 0.82rem;
+  color: var(--color-text-tertiary);
+  max-width: 420px;
+}
+
+/* Кнопки копирования */
+.room-page--lobby .room-copy-buttons { gap: 10px; }
+.room-page--lobby .room-copy-buttons .btn {
+  border-radius: 12px !important;
+  padding: 12px 20px !important;
+  font-weight: 700 !important;
+  font-size: 0.92rem !important;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+}
+.room-page--lobby .room-copy-buttons .btn:first-child {
+  background: linear-gradient(135deg, var(--acc), var(--acc2)) !important;
+  border: none !important;
+  color: #fff !important;
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--acc) 38%, transparent) !important;
+}
+.room-page--lobby .room-copy-buttons .btn:first-child:hover { transform: translateY(-2px); filter: brightness(1.07); }
+.room-page--lobby .room-copy-buttons .btn:last-child {
+  border: 1px solid color-mix(in srgb, var(--acc) 45%, transparent) !important;
+  color: color-mix(in srgb, var(--acc) 80%, white) !important;
+  background: color-mix(in srgb, var(--acc) 10%, transparent) !important;
+}
+.room-page--lobby .room-copy-buttons .btn:last-child:hover { transform: translateY(-2px); background: color-mix(in srgb, var(--acc) 18%, transparent) !important; }
+
+/* ---------- Экран «тебя пригласили» (заход по ссылке без имени) ---------- */
+.room-invite-gate { display: grid; place-items: center; min-height: 80dvh; }
+.room-invite-gate-card {
+  text-align: center; padding: 38px 42px; border-radius: 24px; max-width: min(460px, 92vw);
+  background:
+    radial-gradient(500px 220px at 50% -40%, rgba(124, 92, 252, 0.25), transparent 70%),
+    var(--color-surface-100, #17171f);
+  border: 1px solid rgba(124, 92, 252, 0.3);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+.room-invite-gate-emoji { font-size: 2.6rem; margin-bottom: 8px; }
+.room-invite-gate-card h2 { margin: 0 0 6px; font-size: 1.4rem; }
+.room-invite-gate-sub { margin: 0 0 20px; color: var(--color-text-secondary, #9aa); font-size: 0.92rem; }
+.room-invite-gate-sub b { color: #fff; letter-spacing: 0.08em; }
+.room-invite-gate-row { display: flex; flex-direction: column; gap: 10px; }
+.room-invite-gate-row input {
+  padding: 13px 18px; border-radius: 13px; outline: none; text-align: center;
+  background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #fff; font-family: inherit; font-size: 1rem; font-weight: 600;
+}
+.room-invite-gate-row input:focus { border-color: rgba(124, 92, 252, 0.7); box-shadow: 0 0 0 3px rgba(124, 92, 252, 0.18); }
+.room-invite-gate-row .btn-primary-action { margin: 0 !important; min-width: 0 !important; }
+
+/* ---------- HUD статуса → тонкие чипы ---------- */
+.room-page--lobby .game-hud {
+  max-width: 760px;
+  margin: 0 auto 26px !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  gap: 10px !important;
+}
+.room-page--lobby .game-hud > div {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 999px;
+  padding: 7px 14px;
+}
+.room-page--lobby .game-hud-label { font-size: 0.7rem !important; letter-spacing: 0.08em; }
+.room-page--lobby .game-hud-value { font-size: 0.9rem !important; }
+.room-page--lobby .game-hud [data-testid="status-value"] { color: color-mix(in srgb, var(--acc) 80%, white) !important; }
+
+/* ---------- Карточка идентичности игры ---------- */
+.room-page--lobby .lobby-game-info-card {
+  background: color-mix(in srgb, var(--acc) 9%, var(--color-surface-100)) !important;
+  border: 1px solid color-mix(in srgb, var(--acc) 26%, transparent) !important;
+  border-radius: 20px !important;
+  align-items: center !important;
+  gap: var(--space-4) !important;
+  max-width: 520px;
+  padding: var(--space-4) var(--space-5) !important;
+}
+/* Сама плашка теперь <GameIconBadge> — тут только увеличиваем её под это место. */
+.room-page--lobby .lobby-game-info-emoji.gib--room { width: 60px; height: 60px; border-radius: 16px; }
+.room-page--lobby .lobby-game-info-desc { font-size: 0.92rem !important; color: var(--color-text-secondary) !important; }
+
+/* ---------- Кнопка «Начать игру» ---------- */
+.room-page--lobby .btn-primary-action {
+  background: linear-gradient(135deg, var(--acc), var(--acc2)) !important;
+  border: none !important;
+  color: #fff !important;
+  font-size: 1.06rem !important;
+  font-weight: 800 !important;
+  padding: 15px 30px !important;
+  border-radius: 14px !important;
+  min-width: 280px;
+  margin: 6px auto 4px;
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--acc) 40%, transparent) !important;
+  transition: transform 0.16s ease, filter 0.16s ease, box-shadow 0.16s ease;
+}
+.room-page--lobby .btn-primary-action:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.07);
+}
+
+/* ---------- Смена ника ---------- */
+.room-page--lobby .nickname-change { margin-top: 18px; opacity: 0.92; }
+.room-page--lobby .nickname-row {
+  display: flex !important; align-items: center; justify-content: center; gap: 10px; flex-wrap: nowrap;
+  max-width: 380px; margin: 0 auto;
+}
+.room-page--lobby .nickname-row .lobby-nickname-frame { margin: 0; flex: 1; min-width: 0; }
+.room-page--lobby .nickname-row .btn { flex-shrink: 0; }
+
+/* В лобби кнопка выхода НЕ плавает поверх контента, а стоит под ним */
+.room-page--lobby .room-exit-bar {
+  position: static;
+  transform: none;
+  margin: 22px auto 6px;
+}
+.room-page--lobby .room-exit-bar .btn {
+  background: transparent !important;
+  border: 1px solid var(--color-border-default) !important;
+  color: var(--color-text-tertiary) !important;
+  box-shadow: none !important;
+  font-size: 0.85rem !important;
+}
+.room-page--lobby .room-exit-bar .btn:hover { color: #fff !important; border-color: rgba(255, 255, 255, 0.35) !important; }
+.room-page--lobby.container:has(.room-exit-bar) { padding-bottom: 24px; }
+
+/* ---------- Панель игроков ---------- */
+.room-page--lobby .lobby-players-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 4px 4px;
+}
+.room-page--lobby .lobby-players-title {
+  font-size: 0.74rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+.room-page--lobby .lobby-players-count {
+  display: inline-grid; place-items: center; min-width: 30px; height: 26px; padding: 0 9px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--acc), var(--acc2));
+  color: #fff; font-weight: 800; font-size: 0.86rem;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--acc) 40%, transparent);
+}
+.room-page--lobby .room-side-stack .players {
+  background: var(--color-surface-100);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 18px;
+  padding: 12px;
+  gap: 8px;
+}
+.room-page--lobby .players .player {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid var(--color-border-subtle) !important;
+  border-radius: 13px !important;
+  padding: 11px 13px !important;
+  display: flex; align-items: center; gap: 11px;
+}
+.room-page--lobby .players .player.active {
+  border-color: color-mix(in srgb, var(--acc) 55%, transparent) !important;
+  background: color-mix(in srgb, var(--acc) 10%, transparent) !important;
+}
+.room-page--lobby .players .player.disconnected { opacity: 0.5; }
+.room-page--lobby .player-avatar {
+  width: 42px !important; height: 42px !important;
+  font-size: 1.05rem !important;
+  background: linear-gradient(140deg, var(--acc), var(--acc2)) !important;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--acc) 34%, transparent) !important;
+}
+.room-page--lobby .players .player.active .player-avatar {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--acc) 60%, transparent),
+              0 4px 12px color-mix(in srgb, var(--acc) 34%, transparent) !important;
+}
+.room-page--lobby .players .player > span:first-of-type { font-weight: 600; }
+
+/* ---------- Настройка партии Мафии в лобби ---------- */
+.mafia-cfg {
+  max-width: 520px; margin: 6px auto 0; text-align: left;
+  background: color-mix(in srgb, var(--acc, #ef4444) 8%, var(--color-surface-100));
+  border: 1px solid color-mix(in srgb, var(--acc, #ef4444) 24%, transparent);
+  border-radius: 18px; padding: 16px 18px;
+}
+.mafia-cfg__title { font-weight: 800; font-size: 0.95rem; margin-bottom: 12px; color: #fff; }
+.mafia-cfg__players {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: 12px; margin-bottom: 10px; border-bottom: 1px solid var(--color-border-subtle); font-weight: 700;
+}
+.mafia-cfg__players small { color: var(--color-text-tertiary); font-weight: 500; }
+.mafia-cfg__roles { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 16px; }
+.mafia-cfg__role { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.88rem; }
+.mafia-cfg__role-name small { color: var(--color-text-tertiary); font-size: 0.7rem; }
+.mafia-cfg__stepper { display: inline-flex; align-items: center; gap: 9px; }
+.mafia-cfg__stepper button {
+  min-width: 28px; height: 28px; padding: 0 8px; border-radius: 9px; border: 1px solid var(--color-border-default);
+  background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 1rem; font-weight: 800; cursor: pointer; line-height: 1;
+  font-family: inherit;
+  transition: background 0.14s ease, border-color 0.14s ease, transform 0.14s ease;
+}
+.mafia-cfg__stepper button:disabled { opacity: 0.3; cursor: not-allowed; }
+.mafia-cfg__stepper button:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--acc, #ef4444) 28%, transparent);
+  border-color: color-mix(in srgb, var(--acc, #ef4444) 55%, transparent);
+  transform: translateY(-1px);
+}
+.mafia-cfg__stepper b {
+  min-width: 30px; text-align: center; font-size: 0.95rem;
+  color: color-mix(in srgb, var(--acc, #ef4444) 70%, white);
+}
+.mafia-cfg__foot { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--color-border-subtle); font-size: 0.85rem; color: var(--color-text-secondary); line-height: 1.45; }
+
+/* Сегмент-контрол (напр. режим «Угадай мелодию») — на всю ширину, не вылезает */
+.mafia-cfg__seg {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+  padding: 5px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 13px;
+  margin-bottom: 4px;
+}
+.mafia-cfg__seg button {
+  border: none; border-radius: 9px; padding: 10px 8px; cursor: pointer;
+  font-family: inherit; font-weight: 700; font-size: 0.86rem;
+  background: transparent; color: var(--color-text-secondary);
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+  white-space: nowrap;
+}
+.mafia-cfg__seg button:hover:not(.is-active) { color: #fff; background: rgba(255, 255, 255, 0.05); }
+.mafia-cfg__seg button.is-active {
+  background: linear-gradient(135deg, var(--acc, #ec4899), var(--acc2, #be185d));
+  color: #fff;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--acc, #ec4899) 40%, transparent);
+}
+
+/* Чипы категорий (нот-режим Мелодии) */
+.mafia-cfg__cats { padding: 9px 2px; border-bottom: 1px dashed var(--color-border-subtle); }
+.mafia-cfg__cats .mafia-cfg__role-name { display: block; margin-bottom: 8px; }
+.mafia-cfg__cats-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.mafia-cfg__cats-chips button {
+  border: 1px solid var(--color-border-default);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-secondary);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.14s ease, color 0.14s ease, border-color 0.14s ease;
+}
+.mafia-cfg__cats-chips button:hover { color: #fff; }
+.mafia-cfg__cats-chips button.is-on {
+  background: linear-gradient(135deg, var(--acc, #ec4899), var(--acc2, #be185d));
+  border-color: transparent;
+  color: #fff;
+}
+
+/* Одноколоночная раскладка настроек (мелодия): строки с разделителями */
+.mafia-cfg__roles--list .mafia-cfg__role {
+  padding: 9px 2px;
+  border-bottom: 1px dashed var(--color-border-subtle);
+}
+.mafia-cfg__roles--list .mafia-cfg__role:last-child { border-bottom: none; }

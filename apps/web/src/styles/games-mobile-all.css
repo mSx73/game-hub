@@ -1,0 +1,748 @@
+/**
+ * PlayForFun — per-game mobile adaptation (all ~60 games)
+ * Targets: .game-area.*-game, .game-layout.*-game, [data-game]
+ * Breakpoints: 768px (tablet), 640px (phone), 400px (small phone)
+ */
+
+/* ═══════════════════════════════════════════
+   SHARED MOBILE GAME SHELL
+   ═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .room-page .room-content-grid {
+    gap: var(--space-3);
+  }
+
+  /* GameLayout-wrapped games */
+  .game-layout {
+    min-height: auto !important;
+    height: auto !important;
+    max-height: none;
+  }
+
+  .game-layout .game-main-container {
+    flex: 1;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .game-layout .game-content {
+    padding: var(--space-3) !important;
+    min-height: auto !important;
+    overflow-x: hidden;
+  }
+
+  .game-layout .game-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    padding: 10px 12px !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 8px !important;
+  }
+
+  .game-layout .game-title {
+    flex-direction: row !important;
+    flex: 1;
+    min-width: 0;
+    text-align: left !important;
+    gap: 8px !important;
+  }
+
+  .game-layout .game-title h1 {
+    font-size: 0.95rem !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .game-layout .game-icon {
+    font-size: 1.4rem !important;
+    flex-shrink: 0;
+  }
+
+  .game-layout .leave-btn:not(.mobile-btn) {
+    display: none !important;
+  }
+
+  .game-layout .mobile-controls {
+    display: flex !important;
+    position: sticky;
+    bottom: 0;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+    background: rgba(8, 10, 16, 0.95);
+    backdrop-filter: blur(12px);
+  }
+
+  /* Scoreboards */
+  .room-page .game-scoreboard,
+  .room-page table.game-scoreboard {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    font-size: 0.85rem;
+  }
+
+  /* Generic action rows */
+  .room-page .game-area .btn,
+  .game-layout .game-content .btn,
+  .room-page .game-area button[type="submit"] {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .room-page .game-area form,
+  .game-layout .game-content form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  /* Rules disclosure */
+  .room-page details.game-rules,
+  .game-layout details.game-rules {
+    font-size: 0.88rem;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Quiz / trivia option grids → single column */
+  .room-page .quiz-options,
+  .room-page .quiz-option-grid,
+  .room-page .tmp-options,
+  .room-page .tmp-kill-options,
+  .room-page .wyr-options,
+  .room-page .trust-options,
+  .room-page .fibbage-options,
+  .room-page .knowfriend-options,
+  .room-page .categories-options,
+  .room-page .emoji-options,
+  .room-page .flags-options,
+  .room-page .logos-options,
+  .room-page .maps-options,
+  .room-page .quotes-options,
+  .room-page .facts-options,
+  .room-page .sequence-options,
+  .room-page .connect-options-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-2) !important;
+  }
+
+  .room-page .quiz-option,
+  .room-page .tmp-option-btn,
+  .room-page .wyr-option,
+  .room-page .trust-option {
+    min-height: 48px !important;
+    width: 100%;
+  }
+
+  /* Two-column flex layouts → stack */
+  .room-page .quiz-layout,
+  .room-page .meme-layout,
+  .room-page .debate-sides,
+  .room-page .bluff-layout,
+  .room-page .fibbing-layout {
+    flex-direction: column !important;
+  }
+
+  /* Image / media in games */
+  .room-page .meme-image,
+  .room-page .caption-image,
+  .room-page .flags-image,
+  .room-page .logos-image,
+  .room-page .maps-image,
+  .room-page .fakeartist-canvas-wrap img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Wavelength scale */
+  .room-page .wavelength-scale-wrap {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .room-page .wavelength-slider {
+    width: 100% !important;
+  }
+  .room-page .wavelength-poles {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  /* Ranking drag list */
+  .room-page .ranking-list,
+  .room-page .ranking-items {
+    gap: var(--space-2);
+  }
+  .room-page .ranking-item {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  /* Reaction / colors / sync — big tap targets */
+  .room-page .reaction-tap-btn,
+  .room-page .colors-option,
+  .room-page .sync-tap-btn {
+    min-height: 72px !important;
+    font-size: 1.25rem !important;
+    width: 100%;
+  }
+  .room-page .colors-options {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: var(--space-2);
+  }
+
+  /* Memory / anagrams tiles */
+  .room-page .memory-symbol-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: var(--space-2);
+  }
+  .room-page .memory-symbol-btn {
+    min-height: 52px;
+    font-size: 1.4rem;
+  }
+  .room-page .anagrams-tiles {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+  .room-page .anagrams-tile {
+    min-width: 36px;
+    min-height: 44px;
+    font-size: 1.1rem;
+  }
+
+  /* Bombparty panel */
+  .room-page .bombparty-requirements {
+    flex-direction: column !important;
+    gap: var(--space-3) !important;
+  }
+  .room-page .bombparty-req-sep { display: none; }
+  .room-page .bombparty-input-form {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .room-page .bombparty-input-form .btn {
+    width: 100%;
+  }
+
+  /* Hot potato */
+  .room-page .hotpotato-panel {
+    text-align: center;
+    padding: var(--space-4);
+  }
+
+  /* Team words */
+  .room-page .teamwords-teams {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Password game */
+  .room-page .password-clue-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Crossword */
+  .room-page .crossword-grid-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
+
+  /* Story / collage text areas */
+  .room-page .story-input-row,
+  .room-page .collage-input-row {
+    flex-direction: column;
+  }
+
+  /* Quiplash / party text inputs */
+  .room-page .quiplash-input-form,
+  .room-page .badadvice-input-form,
+  .room-page .caption-input-form {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   PER-GAME: HAT
+   ═══════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .room-page .hat-game .hat-word-display {
+    font-size: clamp(1.8rem, 8vw, 2.8rem) !important;
+    padding: var(--space-4) var(--space-3);
+  }
+  .room-page .hat-game .hat-timer-ring {
+    width: 64px !important;
+    height: 64px !important;
+  }
+  .room-page .hat-game .hat-actions {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .room-page .hat-game .hat-actions .btn {
+    width: 100%;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   PER-GAME: CROCODILE / SKETCH
+   ═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .room-page .croc-game .crocodile-canvas-wrapper,
+  .room-page .croc-luxe-main .crocodile-canvas-wrapper {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  .room-page .croc-game canvas,
+  .room-page .croc-luxe-main canvas {
+    max-height: min(50dvh, 320px) !important;
+    touch-action: none;
+  }
+  .room-page .crocodile-toolbar {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px;
+    justify-content: center;
+  }
+  .room-page .crocodile-toolbar .tool-btn,
+  .room-page .crocodile-toolbar .croc-tool-btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .room-page .croc-guess-row,
+  .room-page .croc-manual-guess-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .room-page .croc-manual-guess-list button {
+    width: 100%;
+    min-height: 48px;
+  }
+  .room-page .croc-word-choices {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-2);
+  }
+  .room-page .croc-word-choice-btn {
+    min-height: 52px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .croc-luxe-bottom-nav {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 8px 6px;
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+  }
+  .croc-luxe-bottom-nav button {
+    font-size: 0.65rem;
+    padding: 6px 4px;
+    min-height: 48px;
+  }
+  .room-page .croc-luxe-main {
+    margin-top: 56px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important;
+  }
+  .room-page .croc-letter-banner {
+    margin-bottom: 10px;
+  }
+  .room-page .croc-letter-banner__dashes .croc-hint__dash {
+    width: 18px;
+    border-bottom-width: 3px;
+  }
+  .room-page .croc-confirm-section--inline .croc-confirm-chip {
+    min-height: 52px;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   PER-GAME: MAFIA (legacy table)
+   ═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .room-page--mafia-playing .mafia-table-area {
+    padding: var(--space-3) !important;
+  }
+  .room-page--mafia-playing .mafia-table-container {
+    min-height: min(45dvh, 360px);
+    overflow-x: auto;
+  }
+  .room-page--mafia-playing .mafia-control-panel {
+    max-height: none;
+    overflow: visible;
+  }
+  .room-page--mafia-playing .mafia-mobile-tabs {
+    position: sticky;
+    top: 0;
+    z-index: 15;
+    background: rgba(8, 10, 16, 0.9);
+    backdrop-filter: blur(8px);
+    padding: 6px 0;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   PER-GAME: MAFIA2 (fullscreen)
+   ═══════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .mafia-room {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .mafia-room__top {
+    flex-wrap: wrap;
+    padding: 10px 12px;
+    gap: 8px;
+  }
+  .mafia-room__brand { font-size: 1rem; }
+  .mafia-room__phase { font-size: 0.78rem; padding: 6px 12px; }
+  .mafia-stage {
+    width: 100%;
+    aspect-ratio: 1 / 1.1;
+    max-height: 58dvh;
+  }
+  #game-table { width: 72% !important; }
+  .seat {
+    width: clamp(52px, 18vw, 72px) !important;
+  }
+  .player-card__avatar {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 0.9rem !important;
+  }
+  .player-card__name {
+    font-size: 0.62rem !important;
+    max-width: 56px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mafia-room__dock,
+  .mafia-room__actions {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+  }
+  .mafia-room__dock button,
+  .mafia-room__actions button,
+  .mafia-room .mafia-action-bar button,
+  .mafia-room .mafia-vote-bar button,
+  .mafia-dock__btn {
+    min-height: 48px;
+    flex: 1 1 calc(50% - 8px);
+    max-width: 100%;
+  }
+  .mafia-dock {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 10px 12px;
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+    left: 8px;
+    right: 8px;
+  }
+  .mafia-dock__label {
+    text-align: center;
+    font-size: 0.85rem;
+  }
+  .mafia-dock__btn {
+    width: 100%;
+    flex: none;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   PER-GAME: BUNKER (fullscreen)
+   ═══════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .bunker-room {
+    padding: 0 10px;
+    padding-bottom: calc(140px + env(safe-area-inset-bottom));
+  }
+  .bunker-top { padding: 10px 0; }
+  .bunker-grid,
+  .bunker-mycard-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+  .bunker-dock {
+    left: 10px;
+    right: 10px;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .bunker-dock button {
+    min-height: 48px;
+    width: 100%;
+  }
+  .bunker-card {
+    padding: 12px;
+    font-size: 0.88rem;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   PER-GAME: MELODY (fullscreen + inline)
+   ═══════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .melody-room {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .melody-room__top {
+    flex-wrap: wrap;
+    padding: 10px 12px;
+  }
+  .melody-room__controls {
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+  }
+  .melody-room__guess-form,
+  .room-page .melody-guess-form {
+    flex-direction: column !important;
+    width: 100%;
+  }
+  .melody-room__guess-form input,
+  .room-page .melody-guess-input {
+    width: 100%;
+    min-height: 48px;
+  }
+  .melody-room__guess-form button,
+  .room-page .melody-guess-form button {
+    width: 100%;
+    min-height: 48px;
+  }
+  .melody-visualizer {
+    height: 56px !important;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   PER-GAME: SPY / CHAMELEON / IMPOSTOR / WHOAMI
+   ═══════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .room-page .spy-game .spy-location-card,
+  .room-page .chameleon-game .chameleon-word-card,
+  .room-page .whoami-game .whoami-card,
+  .room-page .impostor-game .impostor-card {
+    padding: var(--space-4);
+    font-size: 1rem;
+  }
+  .room-page .spy-game .spy-vote-grid,
+  .room-page .chameleon-game .chameleon-vote-grid,
+  .room-page .impostor-game .impostor-vote-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   PER-GAME: ALIAS / WORDBOMB / BOMB PARTY
+   ═══════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .room-page .alias-game .alias-word,
+  .room-page .wordbomb-game .wordbomb-word {
+    font-size: clamp(1.4rem, 6vw, 2rem) !important;
+  }
+  .room-page .wordbomb-game .wordbomb-mines {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   PER-GAME: MEME / QUIPLASH / CAPTION
+   ═══════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .room-page .meme-game .meme-prompt,
+  .room-page .quiplash-game .quiplash-prompt,
+  .room-page .caption-game .caption-prompt {
+    font-size: 1rem;
+    padding: var(--space-3);
+  }
+  .room-page .meme-game textarea,
+  .room-page .quiplash-game textarea,
+  .room-page .caption-game textarea {
+    min-height: 100px;
+  }
+  .room-page .meme-vote-cards,
+  .room-page .quiplash-duel-cards {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   PER-GAME: ASSOCIATIONS
+   ═══════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .room-page .assoc-game .assoc-chain {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .room-page .assoc-game .assoc-chip {
+    font-size: 0.85rem;
+    padding: 8px 12px;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   PER-GAME: WAVELENGTH / ESCALATION / BLUFF
+   ═══════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .room-page .wavelength-game .wavelength-clue {
+    font-size: 1.1rem;
+    padding: var(--space-3);
+  }
+  .room-page .escalation-game .escalation-prompt,
+  .room-page .bluff-game .bluff-word {
+    font-size: 1.15rem;
+  }
+  .room-page .bluff-game .bluff-definitions {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   PER-GAME: TRIVIA MURDER
+   ═══════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .room-page .triviamurder-game .tmp-kill-btn {
+    min-height: 64px !important;
+    font-size: 1.5rem !important;
+  }
+  .room-page .triviamurder-game .tmp-question {
+    font-size: 1.1rem !important;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   PER-GAME: GENERIC (crossword, sketch fallback)
+   ═══════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .room-page .generic-game {
+    overflow-x: hidden;
+  }
+  .room-page[data-game="crossword"] .crossword-panel {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   DATA-GAME UNIVERSAL OVERRIDES (all catalog IDs)
+   ═══════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .room-page[data-game] .game-area,
+  .room-page[data-game] .game-layout .game-content {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Hide verbose hero on small phones during active play to save space */
+  .room-page--playing[data-game] .gx-hero {
+    padding: var(--space-3) var(--space-4);
+    margin-bottom: var(--space-2);
+  }
+  .room-page--playing[data-game] .gx-hero__tagline {
+    display: none;
+  }
+  .room-page--playing[data-game] .gx-hero__emoji {
+    font-size: 1.75rem;
+  }
+
+  /* Player confirm lists (croc, hat, etc.) */
+  .room-page[data-game="crocodile"] .croc-guess-buttons,
+  .room-page[data-game="sketch"] .croc-guess-buttons,
+  .room-page[data-game="hat"] .hat-guess-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 400px) {
+  .room-page .game-area-title {
+    font-size: 1rem !important;
+  }
+  .game-layout .game-title h1 {
+    font-size: 0.85rem !important;
+  }
+  .room-page .colors-options {
+    grid-template-columns: 1fr !important;
+  }
+  .room-page .memory-symbol-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+  .gp-bento { grid-template-columns: 1fr !important; }
+}
+
+/* Touch: disable hover lift on game cards */
+@media (hover: none) and (pointer: coarse) {
+  .room-page .game-area .quiz-option:hover,
+  .room-page .game-area .wyr-option:hover,
+  .room-page [class*="-vote-card"]:hover {
+    transform: none;
+  }
+  .room-page .game-area .quiz-option:active,
+  .room-page .game-area .wyr-option:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+}
+
+/* Fusion CSS games — party & simple */
+@media (max-width: 640px) {
+  .room-page .spy-guess-option,
+  .room-page .meme-vote-card,
+  .room-page .alias-score-row {
+    min-height: 48px;
+    width: 100%;
+  }
+  .room-page .quiz-game .quiz-option {
+    min-height: 52px !important;
+    font-size: 0.95rem !important;
+    padding: 14px 16px !important;
+  }
+  .room-page .quiz-game .quiz-question {
+    padding: 16px !important;
+    font-size: 1.1rem !important;
+  }
+  .room-page .flags-game .flags-flag-img {
+    max-width: min(320px, 92vw);
+    height: auto;
+  }
+  .room-page:not(.room-page--lobby) .room-id-container {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 12px !important;
+  }
+  .room-page .quiplash-duel {
+    flex-direction: column;
+  }
+  .room-page .story-fusion-feed {
+    max-height: 40dvh;
+    overflow-y: auto;
+  }
+}
+
+@media (max-height: 480px) and (orientation: landscape) {
+  .room-page--playing .gx-hero {
+    display: none;
+  }
+  .game-layout .game-header {
+    padding: 6px 10px !important;
+  }
+  .game-layout .game-content {
+    padding: var(--space-2) !important;
+  }
+  .room-page .croc-game canvas {
+    max-height: 40dvh !important;
+  }
+}
