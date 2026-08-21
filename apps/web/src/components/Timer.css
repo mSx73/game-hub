@@ -1,0 +1,156 @@
+/* Timer Component Styles */
+
+.timer {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.timer__ring {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timer__svg {
+  transform: rotate(-90deg);
+}
+
+.timer__content {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.timer__value {
+  font-family: var(--font-mono);
+  font-weight: var(--font-bold);
+  line-height: 1;
+  color: var(--color-text-primary);
+}
+
+.timer__unit {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+}
+
+/* Sizes */
+.timer--sm {
+  .timer__svg {
+    width: 48px;
+    height: 48px;
+  }
+  .timer__value {
+    font-size: var(--text-xl);
+  }
+}
+
+.timer--md {
+  .timer__svg {
+    width: 64px;
+    height: 64px;
+  }
+  .timer__value {
+    font-size: var(--text-2xl);
+  }
+}
+
+.timer--lg {
+  .timer__svg {
+    width: 80px;
+    height: 80px;
+  }
+  .timer__value {
+    font-size: var(--text-3xl);
+  }
+}
+
+/* Progress bar */
+.timer__bar {
+  width: 100%;
+  height: 4px;
+  background: var(--color-surface-300);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.timer__bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 1s linear, background-color 0.3s ease;
+}
+
+/* States */
+.timer--urgent .timer__value {
+  color: var(--color-error-500);
+  animation: timer-pulse 1s ease-in-out infinite;
+}
+
+.timer--urgent .timer__svg circle:last-child {
+  animation: timer-pulse-stroke 1s ease-in-out infinite;
+}
+
+.timer--paused {
+  opacity: 0.6;
+}
+
+.timer--paused .timer__bar-fill {
+  animation: none;
+}
+
+/* Mini timer */
+.mini-timer {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  background: var(--color-surface-100);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-md);
+  white-space: nowrap;
+}
+
+.mini-timer--urgent {
+  color: var(--color-error-500);
+  background: var(--color-error-50);
+  animation: timer-pulse 1s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes timer-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes timer-pulse-stroke {
+  0%, 100% {
+    stroke-opacity: 1;
+  }
+  50% {
+    stroke-opacity: 0.6;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .timer--urgent .timer__value,
+  .timer--urgent .timer__svg circle:last-child,
+  .mini-timer--urgent {
+    animation: none;
+  }
+  
+  .timer__bar-fill {
+    transition: none;
+  }
+}

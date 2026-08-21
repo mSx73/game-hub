@@ -1,0 +1,188 @@
+/**
+ * Per-game unique visual accents — watermark tints & card moods.
+ * Applied via [data-game] on .room-page--playing / .gx-atmosphere.
+ */
+
+/* ── Detective / social intrigue ── */
+.room-page--playing[data-game="spy"],
+.room-page--playing[data-game="impostor"],
+.room-page--playing[data-game="chameleon"],
+.room-page--playing[data-game="fibbing"],
+.room-page--playing[data-game="whoami"],
+.room-page--playing[data-game="psych"],
+.room-page--playing[data-game="fakeartist"] {
+  --gx-card-glow: rgba(99, 102, 241, 0.15);
+}
+
+/* ── Words & language ── */
+.room-page--playing[data-game="alias"] .game-area,
+.room-page--playing[data-game="wordchain"] .game-area,
+.room-page--playing[data-game="anagrams"] .game-area,
+.room-page--playing[data-game="rhyme"] .game-area,
+.room-page--playing[data-game="categories"] .game-area,
+.room-page--playing[data-game="lastword"] .game-area,
+.room-page--playing[data-game="password"] .game-area,
+.room-page--playing[data-game="teamwords"] .game-area {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(6, 182, 212, 0.1), transparent),
+    radial-gradient(circle at 90% 90%, rgba(245, 158, 11, 0.06), transparent 40%) !important;
+}
+
+/* ── Party & creative ── */
+.room-page--playing[data-game="quiplash"] .game-area,
+.room-page--playing[data-game="knowfriend"] .game-area,
+.room-page--playing[data-game="fibbage"] .game-area,
+.room-page--playing[data-game="badadvice"] .game-area,
+.room-page--playing[data-game="caption"] .game-area,
+.room-page--playing[data-game="bluff"] .game-area,
+.room-page--playing[data-game="escalation"] .game-area,
+.room-page--playing[data-game="judge"] .game-area,
+.room-page--playing[data-game="debate"] .game-area {
+  background-image:
+    radial-gradient(circle at 15% 25%, rgba(236, 72, 153, 0.09), transparent 38%),
+    radial-gradient(circle at 85% 75%, rgba(168, 85, 247, 0.08), transparent 38%) !important;
+}
+
+/* ── Trivia & knowledge ── */
+.room-page--playing[data-game="facts"] .game-area,
+.room-page--playing[data-game="quotes"] .game-area,
+.room-page--playing[data-game="timeline"] .game-area,
+.room-page--playing[data-game="ranking"] .game-area,
+.room-page--playing[data-game="auction"] .game-area,
+.room-page--playing[data-game="priceisright"] .game-area,
+.room-page--playing[data-game="sequence"] .game-area,
+.room-page--playing[data-game="emoji"] .game-area,
+.room-page--playing[data-game="connect"] .game-area {
+  background-image: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.1), transparent 55%) !important;
+}
+
+/* ── Social & icebreaker ── */
+.room-page--playing[data-game="wouldyourather"] .game-area,
+.room-page--playing[data-game="prediction"] .game-area,
+.room-page--playing[data-game="trust"] .game-area,
+.room-page--playing[data-game="truths"] .game-area,
+.room-page--playing[data-game="story"] .game-area,
+.room-page--playing[data-game="wavelength"] .game-area,
+.room-page--playing[data-game="collage"] .game-area,
+.room-page--playing[data-game="emojiart"] .game-area {
+  background-image: linear-gradient(160deg, rgba(168, 85, 247, 0.07), transparent 50%, rgba(20, 184, 166, 0.06)) !important;
+}
+
+/* ── Action & reflex ── */
+.room-page--playing[data-game="memory"] .game-area,
+.room-page--playing[data-game="sync"] .game-area,
+.room-page--playing[data-game="hotpotato"] .game-area {
+  border-width: 2px !important;
+}
+
+/* ── Associations special flash ── */
+.room-page--playing[data-game="associations"] .game-area {
+  transition: box-shadow 0.3s ease;
+}
+.room-page--playing[data-game="associations"] .game-area:focus-within {
+  box-shadow: 0 0 80px rgba(139, 92, 246, 0.2), 0 24px 64px rgba(0,0,0,0.5) !important;
+}
+
+/* ── Atmosphere per-game orb overrides (all catalog games) ── */
+.gx-atmosphere[data-game="mafia"] .gx-atmosphere__orb--1,
+.gx-atmosphere[data-game="mafia2"] .gx-atmosphere__orb--1 { background: rgba(239, 68, 68, 0.38); }
+.gx-atmosphere[data-game="hat"] .gx-atmosphere__orb--1 { background: rgba(251, 191, 36, 0.38); }
+.gx-atmosphere[data-game="alias"] .gx-atmosphere__orb--1 { background: rgba(245, 158, 11, 0.35); }
+.gx-atmosphere[data-game="spy"] .gx-atmosphere__orb--1 { background: rgba(99, 102, 241, 0.38); }
+.gx-atmosphere[data-game="quiz"] .gx-atmosphere__orb--1 { background: rgba(59, 130, 246, 0.38); }
+.gx-atmosphere[data-game="meme"] .gx-atmosphere__orb--1 { background: rgba(236, 72, 153, 0.35); }
+.gx-atmosphere[data-game="quiplash"] .gx-atmosphere__orb--1 { background: rgba(168, 85, 247, 0.35); }
+.gx-atmosphere[data-game="knowfriend"] .gx-atmosphere__orb--1 { background: rgba(20, 184, 166, 0.35); }
+.gx-atmosphere[data-game="fibbage"] .gx-atmosphere__orb--1 { background: rgba(249, 115, 22, 0.35); }
+.gx-atmosphere[data-game="badadvice"] .gx-atmosphere__orb--1 { background: rgba(239, 68, 68, 0.32); }
+.gx-atmosphere[data-game="wordbomb"] .gx-atmosphere__orb--1,
+.gx-atmosphere[data-game="bombparty"] .gx-atmosphere__orb--1 { background: rgba(244, 63, 94, 0.4); }
+.gx-atmosphere[data-game="associations"] .gx-atmosphere__orb--1 { background: rgba(139, 92, 246, 0.38); }
+.gx-atmosphere[data-game="rhyme"] .gx-atmosphere__orb--1 { background: rgba(168, 85, 247, 0.3); }
+.gx-atmosphere[data-game="categories"] .gx-atmosphere__orb--1 { background: rgba(14, 165, 233, 0.35); }
+.gx-atmosphere[data-game="anagrams"] .gx-atmosphere__orb--1 { background: rgba(6, 182, 212, 0.35); }
+.gx-atmosphere[data-game="wordchain"] .gx-atmosphere__orb--1 { background: rgba(6, 182, 212, 0.32); }
+.gx-atmosphere[data-game="crossword"] .gx-atmosphere__orb--1 { background: rgba(107, 114, 128, 0.35); }
+.gx-atmosphere[data-game="debate"] .gx-atmosphere__orb--1 { background: rgba(239, 68, 68, 0.28); }
+.gx-atmosphere[data-game="truths"] .gx-atmosphere__orb--1 { background: rgba(234, 179, 8, 0.32); }
+.gx-atmosphere[data-game="whoami"] .gx-atmosphere__orb--1 { background: rgba(217, 70, 239, 0.35); }
+.gx-atmosphere[data-game="wouldyourather"] .gx-atmosphere__orb--1 { background: rgba(14, 165, 233, 0.35); }
+.gx-atmosphere[data-game="prediction"] .gx-atmosphere__orb--1 { background: rgba(168, 85, 247, 0.32); }
+.gx-atmosphere[data-game="psych"] .gx-atmosphere__orb--1 { background: rgba(99, 102, 241, 0.35); }
+.gx-atmosphere[data-game="judge"] .gx-atmosphere__orb--1 { background: rgba(251, 191, 36, 0.3); }
+.gx-atmosphere[data-game="trust"] .gx-atmosphere__orb--1 { background: rgba(16, 185, 129, 0.32); }
+.gx-atmosphere[data-game="impostor"] .gx-atmosphere__orb--1 { background: rgba(99, 102, 241, 0.35); }
+.gx-atmosphere[data-game="story"] .gx-atmosphere__orb--1 { background: rgba(244, 114, 182, 0.32); }
+.gx-atmosphere[data-game="fakeartist"] .gx-atmosphere__orb--1 { background: rgba(163, 230, 53, 0.28); }
+.gx-atmosphere[data-game="wavelength"] .gx-atmosphere__orb--1 { background: rgba(45, 212, 191, 0.35); }
+.gx-atmosphere[data-game="bluff"] .gx-atmosphere__orb--1 { background: rgba(192, 132, 252, 0.35); }
+.gx-atmosphere[data-game="connect"] .gx-atmosphere__orb--1 { background: rgba(99, 102, 241, 0.32); }
+.gx-atmosphere[data-game="caption"] .gx-atmosphere__orb--1 { background: rgba(251, 146, 60, 0.32); }
+.gx-atmosphere[data-game="collage"] .gx-atmosphere__orb--1 { background: rgba(236, 72, 153, 0.28); }
+.gx-atmosphere[data-game="emojiart"] .gx-atmosphere__orb--1 { background: rgba(236, 72, 153, 0.3); }
+.gx-atmosphere[data-game="emoji"] .gx-atmosphere__orb--1 { background: rgba(250, 204, 21, 0.3); }
+.gx-atmosphere[data-game="auction"] .gx-atmosphere__orb--1 { background: rgba(59, 130, 246, 0.3); }
+.gx-atmosphere[data-game="ranking"] .gx-atmosphere__orb--1 { background: rgba(59, 130, 246, 0.32); }
+.gx-atmosphere[data-game="timeline"] .gx-atmosphere__orb--1 { background: rgba(59, 130, 246, 0.28); }
+.gx-atmosphere[data-game="priceisright"] .gx-atmosphere__orb--1 { background: rgba(34, 197, 94, 0.32); }
+.gx-atmosphere[data-game="facts"] .gx-atmosphere__orb--1 { background: rgba(59, 130, 246, 0.3); }
+.gx-atmosphere[data-game="flags"] .gx-atmosphere__orb--1 { background: rgba(56, 189, 248, 0.35); }
+.gx-atmosphere[data-game="logos"] .gx-atmosphere__orb--1 { background: rgba(56, 189, 248, 0.32); }
+.gx-atmosphere[data-game="maps"] .gx-atmosphere__orb--1 { background: rgba(34, 197, 94, 0.28); }
+.gx-atmosphere[data-game="quotes"] .gx-atmosphere__orb--1 { background: rgba(59, 130, 246, 0.28); }
+.gx-atmosphere[data-game="chameleon"] .gx-atmosphere__orb--1 { background: rgba(74, 222, 128, 0.32); }
+.gx-atmosphere[data-game="escalation"] .gx-atmosphere__orb--1 { background: rgba(249, 115, 22, 0.38); }
+.gx-atmosphere[data-game="memory"] .gx-atmosphere__orb--1 { background: rgba(168, 85, 247, 0.32); }
+.gx-atmosphere[data-game="hotpotato"] .gx-atmosphere__orb--1 { background: rgba(251, 146, 60, 0.4); }
+.gx-atmosphere[data-game="fibbing"] .gx-atmosphere__orb--1 { background: rgba(251, 191, 36, 0.32); }
+.gx-atmosphere[data-game="sequence"] .gx-atmosphere__orb--1 { background: rgba(59, 130, 246, 0.3); }
+.gx-atmosphere[data-game="reaction"] .gx-atmosphere__orb--1 { background: rgba(244, 63, 94, 0.38); }
+.gx-atmosphere[data-game="colors"] .gx-atmosphere__orb--1 { background: rgba(168, 85, 247, 0.35); }
+.gx-atmosphere[data-game="sync"] .gx-atmosphere__orb--1 { background: rgba(6, 182, 212, 0.35); }
+.gx-atmosphere[data-game="password"] .gx-atmosphere__orb--1 { background: rgba(168, 85, 247, 0.32); }
+.gx-atmosphere[data-game="lastword"] .gx-atmosphere__orb--1 { background: rgba(245, 158, 11, 0.32); }
+
+/* Lobby waiting — cinematic invite */
+.room-page--lobby.room-page--experience .gx-hero {
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-2);
+}
+
+.room-page--lobby .gx-hero__badge--host {
+  animation: gx-host-glow 2s ease-in-out infinite;
+}
+@keyframes gx-host-glow {
+  0%, 100% { box-shadow: 0 0 16px rgba(251, 191, 36, 0.15); }
+  50% { box-shadow: 0 0 28px rgba(251, 191, 36, 0.35); }
+}
+
+/* Voting / choice buttons polish */
+.room-page--playing .game-area .quiz-option,
+.room-page--playing .game-area .wyr-option,
+.room-page--playing .game-area .vote-btn,
+.room-page--playing .game-area .choice-btn {
+  border-radius: var(--radius-lg) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+.room-page--playing .game-area .quiz-option:hover,
+.room-page--playing .game-area .wyr-option:hover,
+.room-page--playing .game-area .vote-btn:hover,
+.room-page--playing .game-area .choice-btn:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--gx-a) 45%, transparent) !important;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--gx-a) 20%, transparent) !important;
+}
+
+/* Winner / results screens */
+.room-page--playing .game-area .game-over,
+.room-page--playing .game-area .round-result,
+.room-page--playing .game-area .winner-banner {
+  padding: var(--space-6);
+  border-radius: var(--radius-2xl);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--gx-a) 15%, transparent), transparent 60%);
+  border: 1px solid color-mix(in srgb, var(--gx-a) 30%, transparent);
+  box-shadow: 0 0 60px color-mix(in srgb, var(--gx-a) 15%, transparent);
+  text-align: center;
+}

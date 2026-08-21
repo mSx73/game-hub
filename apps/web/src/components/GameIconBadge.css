@@ -1,0 +1,38 @@
+/* ============================================================
+   GameIconBadge — цветная плашка с иконкой Lucide вместо эмодзи.
+   Заменяет «эмодзи как арт» в каталоге и шапке комнаты.
+   ============================================================ */
+.game-icon-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 28%;
+  background: linear-gradient(150deg, var(--gib-a), var(--gib-b));
+  box-shadow:
+    0 10px 26px color-mix(in srgb, var(--gib-a) 45%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  color: #fff;
+  user-select: none;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.game-icon-badge svg {
+  width: 52%;
+  height: 52%;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.25));
+}
+
+/* Размеры под конкретные места использования — из --icon-* (design-tokens.css) */
+.gib--hero { width: var(--icon-hero, clamp(84px, 13vw, 132px)); height: var(--icon-hero, clamp(84px, 13vw, 132px)); border-radius: 26%; }
+.gib--bento { width: var(--icon-bento, 56px); height: var(--icon-bento, 56px); }
+.gib--lane { width: var(--icon-lane, 46px); height: var(--icon-lane, 46px); }
+.gib--room { width: var(--icon-room, 40px); height: var(--icon-room, 40px); }
+.gib--sm { width: var(--icon-sm, 30px); height: var(--icon-sm, 30px); border-radius: 30%; }
+
+/* Крупные варианты слегка «плавают», как раньше плавало эмодзи в hero */
+.gib--hero { animation: gib-float 5s ease-in-out infinite; }
+@keyframes gib-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+/* Постеры (bento/lane) уже сами двигают весь блок на hover — тут только чуть ожив */
+.gp-poster:hover .gib--bento,
+.gp-poster:hover .gib--lane { transform: scale(1.08) rotate(-3deg); }

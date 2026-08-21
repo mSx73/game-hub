@@ -1,0 +1,233 @@
+/**
+ * Global mobile adaptation — touch, safe areas, room & game layouts.
+ */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Minimum touch targets (WCAG 2.5.5 advisory) */
+@media (max-width: 900px) {
+  button,
+  .btn,
+  a.btn,
+  [role="button"],
+  input[type="submit"],
+  input[type="button"] {
+    min-height: 44px;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 16px !important; /* prevents iOS zoom on focus */
+  }
+}
+
+/* Prevent horizontal scroll */
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Safe areas for notched phones */
+.connection-bar {
+  padding-left: max(var(--space-4), env(safe-area-inset-left));
+  padding-right: max(var(--space-4), env(safe-area-inset-right));
+}
+
+/* ===== ROOM PAGE MOBILE ===== */
+@media (max-width: 768px) {
+  .room-page.room-page--experience {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+
+  .room-page .container {
+    padding: var(--space-3) var(--space-3) calc(var(--space-6) + env(safe-area-inset-bottom));
+    max-width: 100%;
+  }
+
+  .room-page--playing .gx-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--space-4);
+    margin-bottom: var(--space-3);
+  }
+
+  .room-page--playing .gx-hero__main {
+    width: 100%;
+  }
+
+  .room-page--playing .gx-hero__emoji {
+    font-size: 2rem;
+  }
+
+  .room-page--playing .gx-hero__title {
+    font-size: 1.25rem;
+  }
+
+  .room-page--playing .gx-hero__tagline {
+    font-size: 0.82rem;
+  }
+
+  .room-page--playing .gx-hero__meta {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .room-page--playing .game-area {
+    padding: var(--space-4) var(--space-3) !important;
+    border-radius: var(--radius-xl) !important;
+  }
+
+  .room-page--playing .host-control-panel {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+
+  .room-page--playing .host-control-panel__actions {
+    width: 100%;
+  }
+
+  .room-page--playing .host-control-panel__actions .btn {
+    width: 100%;
+  }
+
+  .room-id-container {
+    padding: var(--space-4) var(--space-3) !important;
+  }
+
+  .room-exit-bar {
+    margin-bottom: calc(8px + env(safe-area-inset-bottom));
+  }
+
+  /* GameLayout mobile */
+  .game-layout .game-header {
+    padding: 10px 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .game-layout .game-title h1 {
+    font-size: 1.25rem;
+  }
+
+  .game-layout .game-icon {
+    font-size: 1.75rem;
+  }
+
+  .game-layout .game-meta {
+    display: none;
+  }
+
+  .game-layout .leave-btn:not(.mobile-btn) {
+    padding: 8px 12px;
+    font-size: 0.82rem;
+  }
+
+  .game-layout .game-main-container {
+    padding: 12px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .game-layout .mobile-controls {
+    display: flex;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Croc luxe mobile */
+  .croc-luxe-layout {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+
+  .croc-luxe-bottom-nav {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Filters in room lobby */
+  .room-page--lobby .hf-filters,
+  .room-page--lobby .hf-filters-row {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .room-page--lobby .hf-filters::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .room-page--playing .timer-display {
+    font-size: 0.9rem;
+    padding: 4px 12px;
+  }
+
+  .gx-atmosphere__watermark {
+    display: none;
+  }
+
+  .theme-toggle {
+    bottom: calc(72px + env(safe-area-inset-bottom)) !important;
+    top: auto !important;
+  }
+
+  .theme-toggle--room {
+    bottom: calc(72px + env(safe-area-inset-bottom)) !important;
+  }
+
+  body:not(.room-game-chrome) .theme-toggle {
+    bottom: calc(8px + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+/* Fullscreen game rooms */
+@media (max-width: 640px) {
+  .mafia-room__top,
+  .bunker-room__top,
+  .melody-room__top {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+
+  .mafia-stage {
+    width: 100%;
+    max-height: 65dvh;
+  }
+}
+
+/* Touch feedback */
+@media (hover: none) and (pointer: coarse) {
+  .gp-poster:active,
+  .hf-card:active,
+  .room-page--playing .game-area .btn-primary-action:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+
+  .gp-poster:hover,
+  .hf-card:hover {
+    transform: none;
+  }
+}
+
+/* Landscape phone — compact hero */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hf-hero {
+    padding: 32px 16px !important;
+  }
+
+  .hf-hero-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .gx-hero {
+    display: none;
+  }
+}
