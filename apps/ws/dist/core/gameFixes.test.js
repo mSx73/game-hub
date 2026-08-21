@@ -1,8 +1,10 @@
+import { describe, test, expect, jest } from '@jest/globals';
 import { remapPlayerIdDeep } from './remapPlayerId.js';
 import { FlagsEngine } from '../games/flags/FlagsEngine.js';
 import { StoryEngine } from '../games/story/StoryEngine.js';
 import { QuizEngine } from '../games/quiz/QuizEngine.js';
 import { AliasEngine } from '../games/alias/AliasEngine.js';
+import { ReactionEngine } from '../games/reaction/ReactionEngine.js';
 
 const mkRoom = (n, extra = {}) => ({
   code: 'TEST',
@@ -154,6 +156,29 @@ describe('TeamWordsEngine — skip-word только для объясняюще
     expect(g.handleSkip(opponent.id)).toBe(false);
     expect(g.handleSkip(explainer)).toBe(true);
     g.cleanup();
+  });
+});
+
+describe('ReactionEngine — реакция до сигнала не засчитывается', () => {
+  test('handleReaction отклоняет клик до game:signal', () => {
+    jest.spyOn(Math, 'random').mockReturnValue(0); // delay = 1000ms
+    const room = mkRoom(2);
+    const g = new ReactionEngine(room);
+    jest.useFakeTimers();
+    g.start();
+    g.setReady('p0', true);
+    g.setReady('p1', true);
+    jest.advanceTimersByTime(3000); // countdown -> startGame
+    expect(g.state).toBe('active');
+    expect(g.signalTime).toBeNull();
+    expect(g.handleReaction('p0')).toBe(false);
+    jest.advanceTimersByTime(1000); // signal fires
+    expect(g.signalTime).not.toBeNull();
+    expect(g.handleReaction('p0')).toBe(true);
+    expect(g.winner).toBe('p0');
+    g.cleanup();
+    jest.useRealTimers();
+    Math.random.mockRestore();
   });
 });
 

@@ -10,6 +10,7 @@ export class ReactionEngine extends EventEmitter {
     this.countdown = 3;
     this.winner = null;
     this.startTime = null;
+    this.signalTime = null;
     this.reactionTime = null;
     this.gameId = 'reaction_' + Date.now();
     this._aborted = false;
@@ -88,6 +89,7 @@ export class ReactionEngine extends EventEmitter {
     if (this._aborted) return;
     this.state = 'active';
     this.startTime = Date.now();
+    this.signalTime = null;
     this.reactionTime = Math.random() * 3000 + 1000; // 1-4 секунды
     this.winner = null;
 
@@ -105,19 +107,20 @@ export class ReactionEngine extends EventEmitter {
     this._signalTimeout = setTimeout(() => {
       this._signalTimeout = null;
       if (!this._aborted && this.state === 'active') {
-        this.emit('game:signal', { timestamp: Date.now() });
+        this.signalTime = Date.now();
+        this.emit('game:signal', { timestamp: this.signalTime });
       }
     }, this.reactionTime);
   }
 
   handleReaction(playerId) {
-    if (this.state !== 'active') return false;
+    if (this.state !== 'active' || !this.signalTime) return false;
     
     const player = this.players.get(playerId);
     if (!player || player.reacted) return false;
     
     const now = Date.now();
-    const elapsed = now - this.startTime - this.reactionTime;
+    const elapsed = now - this.signalTime;
     
     player.reacted = true;
     player.reactionTime = elapsed;
@@ -194,6 +197,7 @@ export class ReactionEngine extends EventEmitter {
       countdown: this.countdown,
       winner: this.winner,
       startTime: this.startTime,
+      signalTime: this.signalTime,
       reactionTime: this.reactionTime
     };
   }
