@@ -66,6 +66,23 @@ describe('FlagsEngine — нет двойных очков после угады
   });
 });
 
+describe('LogosEngine — нет двойных очков после угадывания', () => {
+  test('второй правильный ответ в паузе отклоняется', () => {
+    const { LogosEngine } = require('../games/logos/LogosEngine.js');
+    const g = new LogosEngine(mkRoom(2));
+    g.start();
+    const answer = g.currentBrand.answer;
+    let roundEnded = 0;
+    g.on('round:ended', () => roundEnded++);
+    g.handleChat('p0', answer);
+    expect(g.phase).toBe('reveal');
+    g.handleChat('p1', answer);
+    expect(g.players.find((p) => p.id === 'p1').score).toBe(0);
+    expect(roundEnded).toBe(1);
+    g.cleanup();
+  });
+});
+
 describe('AliasEngine — оффлайн игроки не остаются в ротации', () => {
   test('nextTurn удаляет игрока с isOnline=false из this.players', () => {
     const room = mkRoom(3);

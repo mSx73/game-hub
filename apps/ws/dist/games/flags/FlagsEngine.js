@@ -130,6 +130,8 @@ export class FlagsEngine extends EventEmitter {
 
   endRound() {
     if (this._aborted) return;
+    if (this.phase === 'reveal') return;
+    this.phase = 'reveal';
     if (this._roundDelayTimeout) {
       clearTimeout(this._roundDelayTimeout);
       this._roundDelayTimeout = null;
