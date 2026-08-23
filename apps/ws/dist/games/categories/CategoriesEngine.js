@@ -110,6 +110,7 @@ export class CategoriesEngine extends EventEmitter {
     this.currentCategories = shuffled.slice(0, 5);
     this.currentCategories.forEach(c => this.usedCategories.add(c));
 
+    this.phase = 'playing';
     this.timeLeft = this.roundTime;
     this.emit('round:started', {
       round: this.round, maxRounds: this.maxRounds,
@@ -194,6 +195,8 @@ export class CategoriesEngine extends EventEmitter {
 
   endRound() {
     if (this._aborted) return;
+    if (this.phase === 'results') return;
+    this.phase = 'results';
     if (this._roundDelayTimeout) {
       clearTimeout(this._roundDelayTimeout);
       this._roundDelayTimeout = null;

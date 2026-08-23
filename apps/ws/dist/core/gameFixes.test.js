@@ -4,6 +4,7 @@ import { FlagsEngine } from '../games/flags/FlagsEngine.js';
 import { StoryEngine } from '../games/story/StoryEngine.js';
 import { QuizEngine } from '../games/quiz/QuizEngine.js';
 import { AliasEngine } from '../games/alias/AliasEngine.js';
+import { CategoriesEngine } from '../games/categories/CategoriesEngine.js';
 import { ReactionEngine } from '../games/reaction/ReactionEngine.js';
 
 const mkRoom = (n, extra = {}) => ({
@@ -196,6 +197,30 @@ describe('ReactionEngine — реакция до сигнала не засчи�
     g.cleanup();
     jest.useRealTimers();
     Math.random.mockRestore();
+  });
+});
+
+describe('CategoriesEngine — endRound idempotent', () => {
+  test('double endRound does not double scores; answers rejected during results', () => {
+    const g = new CategoriesEngine(mkRoom(2));
+    g.start();
+    let roundEnded = 0;
+    g.on('round:ended', () => roundEnded++);
+
+    const cat = g.currentCategories[0];
+    g.handleChat('p0', `${cat}: ${g.currentLetter}тест`);
+
+    g.endRound();
+    const scoreAfterFirst = g.players.find((p) => p.id === 'p0').score;
+    expect(scoreAfterFirst).toBeGreaterThan(0);
+    expect(g.phase).toBe('results');
+
+    g.endRound();
+    expect(g.players.find((p) => p.id === 'p0').score).toBe(scoreAfterFirst);
+    expect(roundEnded).toBe(1);
+
+    expect(g.handleChat('p1', `${g.currentCategories[1]}: ${g.currentLetter}другой`)).toBe(false);
+    g.cleanup();
   });
 });
 
