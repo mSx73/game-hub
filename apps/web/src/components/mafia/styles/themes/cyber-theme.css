@@ -1,0 +1,81 @@
+/* Cyber theme — neon cyan & magenta on deep blue-black */
+
+.mafia-table-container.theme-cyber .mafia-table {
+  background:
+    radial-gradient(ellipse 100% 100% at 50% 50%, rgba(8, 16, 32, 0.96) 0%, #030610 70%),
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0, 255, 255, 0.05) 0%, transparent 60%);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  box-shadow:
+    0 0 80px rgba(0, 255, 255, 0.1),
+    inset 0 0 60px rgba(255, 0, 128, 0.03);
+}
+
+.mafia-table-container.theme-cyber .player-seat.alive .player-avatar {
+  --border-color: #00ffff;
+  --glow-color: rgba(0, 255, 255, 0.3);
+}
+
+.mafia-table-container.theme-cyber .player-seat.targeted .player-avatar {
+  --border-color: #ff00ff;
+  --glow-color: rgba(255, 0, 255, 0.5);
+  animation: cyber-pulse 0.8s infinite;
+}
+
+.mafia-table-container.theme-cyber .phase-overlay.night {
+  background:
+    radial-gradient(circle at 30% 50%, rgba(0, 255, 255, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 70% 50%, rgba(255, 0, 128, 0.04) 0%, transparent 50%);
+}
+
+.mafia-table-container.theme-cyber .phase-overlay.voting {
+  background: radial-gradient(ellipse at 50% 50%, rgba(255, 0, 128, 0.06) 0%, transparent 70%);
+}
+
+.mafia-table-container.theme-cyber .timer-progress {
+  stroke: #00ffff;
+  filter: drop-shadow(0 0 6px rgba(0, 255, 255, 0.7));
+}
+
+.mafia-table-container.theme-cyber .mafia-action-panel,
+.mafia-table-container.theme-cyber .vote-booth {
+  background: rgba(3, 8, 20, 0.96);
+  border-color: rgba(0, 255, 255, 0.2);
+  box-shadow: 0 0 24px rgba(0, 255, 255, 0.06);
+}
+
+.mafia-table-container.theme-cyber .mafia-chat {
+  background: rgba(3, 8, 20, 0.97);
+  border-color: rgba(255, 0, 128, 0.25);
+  box-shadow: 4px 0 24px rgba(255, 0, 128, 0.06);
+}
+
+.mafia-table-container.theme-cyber .mafia-message {
+  background: rgba(255, 0, 128, 0.05);
+  border-left-color: rgba(255, 0, 128, 0.5);
+}
+
+.mafia-table-container.theme-cyber .mafia-player-card {
+  border-left-color: #00ffff;
+  background: rgba(0, 255, 255, 0.03);
+}
+
+.mafia-table-container.theme-cyber .mafia-player-card.is-selectable:hover {
+  border-color: rgba(0, 255, 255, 0.5);
+  box-shadow: 0 4px 20px rgba(0, 255, 255, 0.12);
+}
+
+.mafia-table-container.theme-cyber .vote-candidate:hover:not(:disabled) {
+  border-color: rgba(0, 255, 255, 0.4);
+  background: rgba(0, 255, 255, 0.06);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+}
+
+.mafia-table-container.theme-cyber .phase-indicator--night {
+  border-color: rgba(0, 255, 255, 0.4);
+  color: #00ffff;
+}
+
+@keyframes cyber-pulse {
+  0%, 100% { box-shadow: 0 0 16px rgba(255, 0, 255, 0.4); }
+  50% { box-shadow: 0 0 32px rgba(255, 0, 255, 0.7); }
+}
