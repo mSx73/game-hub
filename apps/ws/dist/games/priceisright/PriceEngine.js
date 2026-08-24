@@ -134,6 +134,8 @@ export class PriceEngine extends EventEmitter {
   resolveRound() {
     if (this._aborted) return;
     if (!this.currentProduct) return;
+    if (this.phase === 'results') return;
+    this.phase = 'results';
     if (this._roundDelayTimeout) {
       clearTimeout(this._roundDelayTimeout);
       this._roundDelayTimeout = null;

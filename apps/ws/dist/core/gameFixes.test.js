@@ -224,6 +224,44 @@ describe('CategoriesEngine — endRound idempotent', () => {
   });
 });
 
+describe('PriceEngine — resolveRound idempotent', () => {
+  test('timer/all-answered race does not double-score', () => {
+    const { PriceEngine } = require('../games/priceisright/PriceEngine.js');
+    const g = new PriceEngine(mkRoom(2));
+    g.start();
+    const price = g.currentProduct.price;
+    g.submitGuess('p0', price);
+    g.submitGuess('p1', price - 1);
+    g.resolveRound();
+    const scoreAfterFirst = g.players.find((p) => p.id === 'p0').score;
+    expect(scoreAfterFirst).toBeGreaterThan(0);
+    expect(g.phase).toBe('results');
+    g.resolveRound();
+    expect(g.players.find((p) => p.id === 'p0').score).toBe(scoreAfterFirst);
+    expect(g.submitGuess('p0', price)).toBe(false);
+    g.cleanup();
+  });
+});
+
+describe('TimelineEngine — resolveRound idempotent', () => {
+  test('double resolveRound does not double-score; answers rejected during results', () => {
+    const { TimelineEngine } = require('../games/timeline/TimelineEngine.js');
+    const g = new TimelineEngine(mkRoom(2));
+    g.start();
+    const year = g.currentEvent.year;
+    g.submitAnswer('p0', year);
+    g.submitAnswer('p1', year + 1);
+    g.resolveRound();
+    const scoreAfterFirst = g.players.find((p) => p.id === 'p0').score;
+    expect(scoreAfterFirst).toBeGreaterThan(0);
+    expect(g.phase).toBe('results');
+    g.resolveRound();
+    expect(g.players.find((p) => p.id === 'p0').score).toBe(scoreAfterFirst);
+    expect(g.submitAnswer('p1', year)).toBe(false);
+    g.cleanup();
+  });
+});
+
 describe('StoryEngine — noTimeLimit не зависает при disconnect', () => {
   test('noTimeLimit: handlePlayerDisconnect передаёт ход', () => {
     const room = mkRoom(3, { settings: { noTimeLimit: true, maxStories: 1 } });

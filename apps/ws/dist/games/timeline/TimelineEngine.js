@@ -88,6 +88,7 @@ export class TimelineEngine extends EventEmitter {
     const idx = availableIndices[Math.floor(Math.random() * availableIndices.length)];
     this.usedEvents.add(idx);
     this.currentEvent = this.events[idx];
+    this.phase = 'playing';
 
     this.timeLeft = this.answerTime;
     this.emit('round:started', {
@@ -125,6 +126,8 @@ export class TimelineEngine extends EventEmitter {
   resolveRound() {
     if (this._aborted) return;
     if (!this.currentEvent) return;
+    if (this.phase === 'results') return;
+    this.phase = 'results';
     const correctYear = this.currentEvent.year;
 
     const results = this.players.map(p => {
