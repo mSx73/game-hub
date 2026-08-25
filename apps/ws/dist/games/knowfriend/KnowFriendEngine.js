@@ -58,6 +58,7 @@ export class KnowFriendEngine extends EventEmitter {
   _startRound() {
     if (this._aborted) return;
     if (this.round >= this.subjectOrder.length) { this.endGame(); return; }
+    this.phase = 'playing';
     const subjectId = this.subjectOrder[this.round];
     const subject = this.players.find((p) => p.id === subjectId);
     if (!subject) { this.round++; this._startRound(); return; }
@@ -102,6 +103,8 @@ export class KnowFriendEngine extends EventEmitter {
 
   _resolveRound() {
     if (this._aborted || !this.question) return;
+    if (this.phase === 'results') return;
+    this.phase = 'results';
     const subjectId = this.subjectOrder[this.round - 1];
     const subject = this.players.find((p) => p.id === subjectId);
     const subjectAnswer = this.answers[subjectId];

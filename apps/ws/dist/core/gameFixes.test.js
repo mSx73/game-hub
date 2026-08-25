@@ -116,6 +116,29 @@ describe('SyncEngine — оффлайн не блокирует ready', () => {
   });
 });
 
+describe('KnowFriendEngine — нет двойных очков при resolveRound', () => {
+  test('timer + all-answered race и поздние ответы не дублируют начисление', () => {
+    const { KnowFriendEngine } = require('../games/knowfriend/KnowFriendEngine.js');
+    const room = mkRoom(4);
+    const g = new KnowFriendEngine({ ...room, settings: { answerTime: 30 } });
+    g.start();
+    const subjectId = g.subjectOrder[g.round - 1];
+    const subjectAnswer = 0;
+    g.answers[subjectId] = subjectAnswer;
+    for (const p of g.players) {
+      if (p.id === subjectId) continue;
+      g.submitAnswer(p.id, subjectAnswer);
+    }
+    const guesser = g.players.find((p) => p.id !== subjectId);
+    expect(guesser.score).toBe(100);
+    g._resolveRound();
+    expect(guesser.score).toBe(100);
+    expect(g.phase).toBe('results');
+    expect(g.submitAnswer(subjectId, subjectAnswer)).toBe(false);
+    g.cleanup();
+  });
+});
+
 describe('PasswordEngine — оффлайн пропускается в ротации ведущего', () => {
   test('nextClueGiver не возвращает оффлайн id', () => {
     const { PasswordEngine } = require('../games/password/PasswordEngine.js');
@@ -129,6 +152,7 @@ describe('PasswordEngine — оффлайн пропускается в рота
   });
 });
 
+describe('StoryEngine — noTimeLimit и оффлайн', () => {
   test('noTimeLimit: handlePlayerDisconnect передаёт ход', () => {
     const room = mkRoom(3, { settings: { noTimeLimit: true, maxStories: 1 } });
     const g = new StoryEngine(room);
