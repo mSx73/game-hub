@@ -1,0 +1,652 @@
+/* CROCODILE LUXE MODE — chrome above game-layout / game-area glass (z-index 2) */
+.room-page--experience .croc-luxe-topbar,
+.room-page--experience .croc-luxe-col,
+.room-page--experience .croc-luxe-guess-mobile,
+.room-page--experience .croc-luxe-bottom-nav {
+  position: fixed !important;
+  z-index: 60 !important;
+  pointer-events: auto;
+}
+
+.croc-luxe-topbar {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  background: rgba(10, 10, 10, 0.82);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(14px);
+}
+
+.croc-luxe-topbar__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.croc-luxe-topbar__left strong {
+  font-size: 1.05rem;
+  font-weight: 900;
+  font-style: italic;
+  color: #a0d800;
+}
+
+.croc-luxe-topbar__left div {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 6px 10px;
+}
+
+.croc-luxe-topbar__left span {
+  font-size: 0.55rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+}
+
+.croc-luxe-topbar__left b {
+  color: #bbf532;
+  font-family: var(--font-mono);
+  letter-spacing: 0.06em;
+}
+
+.croc-luxe-timer {
+  border-radius: 12px;
+  border: 1px solid rgba(160, 216, 0, 0.25);
+  background: rgba(160, 216, 0, 0.1);
+  color: #bbf532;
+  font-size: 1rem;
+  font-weight: 800;
+  padding: 8px 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.croc-luxe-col {
+  position: fixed;
+  top: 124px;
+  bottom: 96px;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.croc-luxe-col--left {
+  left: 16px;
+  width: min(280px, 22vw);
+}
+
+.croc-luxe-col--right {
+  right: 16px;
+  width: min(320px, 24vw);
+}
+
+.croc-luxe-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(20, 20, 20, 0.6);
+  backdrop-filter: blur(16px);
+  overflow: hidden;
+}
+
+.croc-luxe-card--chat {
+  height: 100%;
+}
+
+.croc-luxe-card__head {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.croc-luxe-card__head h3 {
+  margin: 0;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.17em;
+  color: #71717a;
+}
+
+.croc-luxe-card__head span {
+  font-size: 0.62rem;
+  color: #a1a1aa;
+}
+
+.croc-luxe-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 10px 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.croc-luxe-rank {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.croc-luxe-rank.self {
+  border-color: rgba(160, 216, 0, 0.32);
+  background: rgba(160, 216, 0, 0.08);
+}
+
+.croc-luxe-rank div {
+  display: grid;
+  gap: 2px;
+}
+
+.croc-luxe-rank strong {
+  font-size: 0.76rem;
+  color: var(--color-text-primary);
+}
+
+.croc-luxe-rank span {
+  font-size: 0.62rem;
+  color: var(--color-text-muted);
+}
+
+.croc-luxe-rank b {
+  font-size: 0.72rem;
+  color: #bbf532;
+}
+
+.croc-luxe-empty {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.croc-luxe-msg {
+  display: grid;
+  gap: 3px;
+}
+
+.croc-luxe-msg strong {
+  font-size: 0.64rem;
+  color: #a1a1aa;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.croc-luxe-msg p {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #d4d4d8;
+  border-radius: 12px;
+  border-top-left-radius: 4px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.croc-luxe-msg.self {
+  justify-items: end;
+}
+
+.croc-luxe-msg.self p {
+  border-top-right-radius: 4px;
+  border-top-left-radius: 12px;
+  background: rgba(160, 216, 0, 0.13);
+  border: 1px solid rgba(160, 216, 0, 0.25);
+}
+
+.croc-luxe-input {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.croc-luxe-input input {
+  flex: 1;
+  border: none;
+  border-radius: 12px;
+  background: rgba(42, 42, 42, 0.9);
+  color: var(--color-text-primary);
+  padding: 10px 12px;
+}
+
+.croc-luxe-input button {
+  width: 36px;
+  border: none;
+  border-radius: 10px;
+  background: #a0d800;
+  color: #1d2800;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.room-page .croc-luxe-main {
+  margin-top: 96px;
+  min-height: calc(100vh - 230px);
+  margin-left: min(320px, 26vw);
+  margin-right: min(360px, 28vw);
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Клики в зонах боковых колонок проходят к fixed-панелям luxe */
+/* Luxe больше не использует GameLayout — клики идут напрямую */
+.room-content-grid.croc-luxe-layout {
+  position: relative;
+  z-index: 1;
+}
+
+.room-page .croc-luxe-main .croc-canvas-wrapper {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.room-page .croc-luxe-main .croc-luxe-canvas {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+}
+
+.room-page .croc-luxe-main .crocodile-toolbar {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(14, 14, 14, 0.76);
+  border-radius: 14px;
+  padding: 12px;
+  justify-content: space-between;
+}
+
+.room-page .croc-luxe-main .crocodile-toolbar .croc-tool-btn {
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  min-width: 8.2rem;
+  min-height: 38px;
+}
+
+.room-page .croc-luxe-main .crocodile-toolbar .croc-tool-btn--active {
+  box-shadow: 0 0 0 2px rgba(160, 216, 0, 0.25);
+  border-color: rgba(160, 216, 0, 0.5);
+}
+
+.crocodile-toolbar--compact {
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+
+.crocodile-toolbar--compact .croc-tool-btn,
+.crocodile-toolbar--compact .clear-btn,
+.crocodile-toolbar--compact .undo-btn {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 10px;
+  justify-content: center;
+}
+
+.crocodile-toolbar--compact .brush-size-slider {
+  width: 72px;
+  min-height: 44px;
+}
+
+.crocodile-toolbar--compact .color-picker {
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+}
+
+.room-page .croc-luxe-main .crocodile-toolbar--compact .croc-tool-btn {
+  min-width: 44px;
+}
+
+.room-page .croc-luxe-main .croc-word {
+  border-color: rgba(160, 216, 0, 0.5);
+  box-shadow: 0 0 24px rgba(160, 216, 0, 0.15);
+  background: rgba(160, 216, 0, 0.08);
+}
+
+.room-page .croc-luxe-main .croc-word-choices {
+  border-color: rgba(160, 216, 0, 0.32);
+  background: rgba(160, 216, 0, 0.06);
+}
+
+.room-page .croc-luxe-main canvas {
+  border-radius: 22px !important;
+  border: 10px solid #0f0f0f !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06), 0 18px 40px rgba(0, 0, 0, 0.4) !important;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.14) 0.9px, transparent 0.9px) !important;
+  background-size: 18px 18px !important;
+}
+
+.room-content-grid.croc-luxe-layout {
+  grid-template-columns: 1fr;
+}
+
+.room-content-grid.croc-luxe-layout > .room-side-stack {
+  display: none;
+}
+
+.croc-luxe-bottom-nav {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 14px;
+  z-index: 60;
+  width: min(760px, calc(100vw - 24px));
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(to top, rgba(9, 9, 9, 0.95), rgba(9, 9, 9, 0.62));
+  padding: 8px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.croc-luxe-bottom-nav button {
+  border: none;
+  border-radius: 12px;
+  height: 58px;
+  background: transparent;
+  color: #71717a;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.croc-luxe-bottom-nav button span {
+  font-size: 1.1rem;
+}
+
+.croc-luxe-bottom-nav button b {
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.croc-luxe-bottom-nav button.active {
+  background: #a0d800;
+  color: #1b2200;
+  box-shadow: 0 0 18px rgba(160, 216, 0, 0.35);
+}
+
+.croc-luxe-bottom-nav button.active:hover {
+  color: #1b2200;
+}
+
+.croc-luxe-bottom-nav button.danger {
+  color: #fca5a5;
+}
+
+@media (max-width: 760px) {
+  .croc-luxe-topbar {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 48px;
+    padding: 0 10px;
+    border-radius: 0;
+  }
+
+  .croc-luxe-topbar__left div {
+    display: none;
+  }
+
+  .croc-luxe-topbar__left strong {
+    font-size: 0.9rem;
+  }
+
+  .croc-luxe-timer {
+    font-size: 0.82rem;
+    padding: 6px 10px;
+  }
+
+  .croc-luxe-main {
+    margin-top: 52px !important;
+  }
+
+  .croc-luxe-canvas {
+    min-height: min(45dvh, 280px);
+  }
+
+  .croc-luxe-guess-btn {
+    min-height: 48px;
+    font-size: 0.9rem;
+  }
+}
+.croc-luxe-guess-btn {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-primary);
+  padding: 10px 12px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.82rem;
+}
+
+.croc-luxe-guess-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.croc-luxe-hint {
+  padding: 12px;
+  opacity: 0.7;
+  font-size: 0.9em;
+  margin: 0;
+}
+
+/* Inline «Кто угадал?» в центре — на широком экране дубль боковой панели;
+   на узком — дубль портала .croc-guess-sheet */
+.croc-luxe-main .croc-confirm-section--inline {
+  display: none;
+}
+
+/* Старая мобильная панель внутри room-page — отключена */
+.croc-luxe-guess-mobile {
+  display: none !important;
+}
+
+/* Портал на document.body: всегда поверх game-layout / atmosphere (PC + mobile) */
+.croc-guess-sheet {
+  position: fixed !important;
+  z-index: 2147483000 !important;
+  pointer-events: none;
+  /* Desktop: справа поверх правой колонки */
+  top: 130px;
+  right: 16px;
+  bottom: 100px;
+  left: auto;
+  width: min(340px, 28vw);
+  padding: 0;
+}
+
+.croc-guess-sheet__inner {
+  pointer-events: auto !important;
+  height: 100%;
+  max-height: none;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  border: 2px solid rgba(160, 216, 0, 0.55);
+  background: rgba(6, 8, 4, 0.98);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(160, 216, 0, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 12px 12px 14px;
+}
+
+@media (max-width: 1180px) {
+  .croc-guess-sheet {
+    top: auto !important;
+    right: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    padding: 0 10px calc(78px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .croc-guess-sheet__inner {
+    height: auto;
+    max-height: min(46dvh, 340px);
+    border-radius: 18px 18px 14px 14px;
+  }
+}
+
+.croc-guess-sheet__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.croc-guess-sheet__head strong {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #bbf532;
+}
+
+.croc-guess-sheet__head span {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.croc-guess-sheet__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  min-height: 0;
+}
+
+.croc-guess-sheet .croc-luxe-guess-btn {
+  min-height: 52px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border: 1px solid rgba(160, 216, 0, 0.35);
+  background: rgba(160, 216, 0, 0.12);
+  color: #e8ff7a;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(160, 216, 0, 0.25);
+}
+
+.croc-guess-sheet .croc-luxe-guess-btn:disabled {
+  opacity: 0.45;
+}
+
+@media (max-width: 1180px) {
+  /* Боковые колонки на телефоне/планшете всегда скрыты — иначе перекрывают игру */
+  .croc-luxe-col,
+  .room-page--experience .croc-luxe-col,
+  .croc-luxe-col--left,
+  .croc-luxe-col--right {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .room-page .croc-luxe-main {
+    margin-top: 86px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  /* game-layout на мобилке не должен занимать весь экран стеклянной плитой */
+  .room-content-grid.croc-luxe-layout .game-layout {
+    height: auto !important;
+    min-height: 0 !important;
+    background: transparent !important;
+    overflow: visible !important;
+    pointer-events: auto;
+  }
+
+  .room-content-grid.croc-luxe-layout .game-main-container,
+  .room-content-grid.croc-luxe-layout .game-content {
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    overflow: visible !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+  }
+
+  .croc-luxe-main .croc-confirm-section--inline {
+    display: block !important;
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(160, 216, 0, 0.35);
+    background: rgba(8, 8, 8, 0.92);
+    position: relative;
+    z-index: 8;
+  }
+
+  .croc-luxe-main .croc-confirm-section--inline .croc-confirm-hint {
+    color: #bbf532;
+    font-weight: 800;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .croc-luxe-main .croc-confirm-section--inline .croc-confirm-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .croc-luxe-main .croc-confirm-section--inline .croc-confirm-chip {
+    width: 100%;
+    min-height: 48px;
+    justify-content: flex-start;
+    border-radius: 12px;
+    font-size: 1rem;
+    touch-action: manipulation;
+  }
+
+  .croc-luxe-main .croc-letter-banner {
+    position: sticky;
+    top: 4px;
+    z-index: 8;
+  }
+
+  .room-page .croc-luxe-main.croc-luxe-main--explainer {
+    padding-bottom: calc(280px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}

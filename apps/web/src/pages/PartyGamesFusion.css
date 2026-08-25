@@ -1,0 +1,129 @@
+/* ============================================================
+   PartyGamesFusion — party-полировка: Шпион / Мем / Элиас.
+   Импортируется последним в RoomPage.
+   ============================================================ */
+
+/* ==================== ШПИОН (индиго) ==================== */
+.room-page .spy-game { --sp: #6366f1; max-width: 640px; margin: 0 auto; }
+.room-page .spy-game .game-area-title { color: #c7d2fe !important; }
+
+.room-page .spy-role {
+  border-radius: 18px !important;
+  padding: 22px 24px !important;
+  font-size: clamp(1.2rem, 4vw, 1.6rem) !important;
+  font-weight: 800 !important;
+  text-align: center;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+.room-page .spy-role--location {
+  background: linear-gradient(150deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.05)) !important;
+  border: 1px solid rgba(99, 102, 241, 0.42) !important;
+  color: #e0e7ff !important;
+}
+.room-page .spy-role--spy {
+  background: linear-gradient(150deg, rgba(226, 59, 78, 0.22), rgba(226, 59, 78, 0.06)) !important;
+  border: 1px solid rgba(226, 59, 78, 0.5) !important;
+  color: #fecaca !important;
+  animation: spy-pulse 2s ease-in-out infinite;
+}
+@keyframes spy-pulse {
+  50% { box-shadow: 0 0 0 5px rgba(226, 59, 78, 0.14), 0 12px 30px rgba(0, 0, 0, 0.3); }
+}
+.room-page .spy-timer { color: #a5b4fc !important; font-weight: 800 !important; }
+.room-page .spy-guess-option {
+  border: 2px solid rgba(99, 102, 241, 0.28) !important;
+  border-radius: 14px !important;
+  font-weight: 700 !important;
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.room-page .spy-guess-option:hover:not(:disabled) {
+  transform: translateY(-3px);
+  border-color: var(--sp) !important;
+  background: rgba(99, 102, 241, 0.14) !important;
+}
+.room-page .spy-result-detail strong { color: #a5b4fc; }
+
+/* ==================== МЕМ-БАТТЛ (розовый) ==================== */
+.room-page .meme-game { --mm: #ec4899; --mm2: #be185d; max-width: 700px; margin: 0 auto; }
+.room-page .meme-game .game-area-title { color: #f9a8d4 !important; }
+.room-page .meme-prompt-container {
+  background: linear-gradient(150deg, rgba(236, 72, 153, 0.16), rgba(236, 72, 153, 0.04)) !important;
+  border: 1px solid rgba(236, 72, 153, 0.32) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+}
+.room-page .meme-prompt {
+  font-size: clamp(1.15rem, 3.6vw, 1.55rem) !important;
+  font-weight: 800 !important;
+  padding-right: 46px; /* место под кубик-реролл, чтобы не наезжал на текст */
+}
+.room-page .meme-input { border-radius: 12px !important; }
+.room-page .meme-input:focus {
+  border-color: var(--mm) !important;
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2) !important;
+  outline: none;
+}
+.room-page .meme-input-row button,
+.room-page .meme-input-row .btn {
+  background: linear-gradient(135deg, var(--mm), var(--mm2)) !important;
+  border: none !important;
+  color: #fff !important;
+  font-weight: 800 !important;
+  box-shadow: 0 8px 20px rgba(236, 72, 153, 0.32) !important;
+}
+.room-page .meme-rofl-btn { border-color: rgba(236, 72, 153, 0.4) !important; }
+.room-page .meme-vote-options { gap: 16px !important; }
+.room-page .meme-vote-option {
+  border: 2px solid rgba(236, 72, 153, 0.28) !important;
+  border-radius: 16px !important;
+  font-weight: 700 !important;
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.room-page .meme-vote-option:hover:not(:disabled) {
+  transform: translateY(-4px);
+  border-color: var(--mm) !important;
+  background: rgba(236, 72, 153, 0.16) !important;
+  box-shadow: 0 14px 30px rgba(236, 72, 153, 0.3) !important;
+}
+.room-page .meme-winner {
+  background: linear-gradient(145deg, rgba(251, 191, 36, 0.2), rgba(236, 72, 153, 0.12)) !important;
+  border-color: rgba(251, 191, 36, 0.5) !important;
+}
+
+/* ==================== ЭЛИАС (янтарь) ==================== */
+.room-page .alias-game { --al: #f59e0b; --al2: #d97706; max-width: 640px; margin: 0 auto; }
+.room-page .alias-game .game-area-title { color: #fcd9a0 !important; }
+.room-page .alias-round-badge {
+  background: rgba(245, 158, 11, 0.16) !important;
+  color: #fcd34d !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
+}
+.room-page .alias-word-card {
+  background: linear-gradient(150deg, rgba(245, 158, 11, 0.18), rgba(245, 158, 11, 0.05)) !important;
+  border: 1px solid rgba(245, 158, 11, 0.4) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+}
+.room-page .alias-word-text {
+  font-size: clamp(1.6rem, 6vw, 2.4rem) !important;
+  font-weight: 900 !important;
+  color: #fff !important;
+  letter-spacing: -0.01em;
+}
+.room-page .alias-word-label { color: #fcd34d !important; }
+.room-page .alias-explainer-strip {
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+  border-radius: 14px !important;
+}
+.room-page .alias-explainer-name { color: #fcd34d !important; font-weight: 800 !important; }
+.room-page .alias-guess-chip {
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+  border-radius: 999px !important;
+}
+.room-page .alias-confirm-block button:first-child,
+.room-page .alias-confirm-block .btn-primary-action {
+  background: linear-gradient(135deg, var(--al), var(--al2)) !important;
+  border: none !important;
+  color: #241400 !important;
+  font-weight: 800 !important;
+}
