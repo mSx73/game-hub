@@ -192,6 +192,8 @@ export class MemeBattleEngine extends EventEmitter {
   resolveRound() {
     if (this._aborted) return;
     if (!this._answerIndex) return;
+    if (this.phase === 'results') return;
+    this.phase = 'results';
     if (this._resolveDelayTimeout) {
       clearTimeout(this._resolveDelayTimeout);
       this._resolveDelayTimeout = null;

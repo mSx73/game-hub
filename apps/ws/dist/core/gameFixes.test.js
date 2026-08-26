@@ -3,6 +3,8 @@ import { FlagsEngine } from '../games/flags/FlagsEngine.js';
 import { StoryEngine } from '../games/story/StoryEngine.js';
 import { QuizEngine } from '../games/quiz/QuizEngine.js';
 import { AliasEngine } from '../games/alias/AliasEngine.js';
+import { CaptionEngine } from '../games/caption/CaptionEngine.js';
+import { MemeBattleEngine } from '../games/meme/MemeBattleEngine.js';
 
 const mkRoom = (n, extra = {}) => ({
   code: 'TEST',
@@ -148,6 +150,45 @@ describe('PasswordEngine — оффлайн пропускается в рота
     room.players[0].isOnline = false;
     g.clueGiverId = 'p0';
     expect(g.nextClueGiver()).toBe('p1');
+    g.cleanup();
+  });
+});
+
+describe('CaptionEngine — нет двойных очков при resolveRound', () => {
+  test('повторный resolveRound и поздний голос судьи не дублируют +3', () => {
+    const g = new CaptionEngine(mkRoom(3));
+    g.start();
+    g.submitAnswer('p0', 'caption one');
+    g.submitAnswer('p2', 'caption two');
+    expect(g.phase).toBe('voting');
+    g.castVote('p1', 0);
+    const winnerId = g.votes.get('p1');
+    const scoreAfterVote = g.players.find((p) => p.id === winnerId).score;
+    expect(scoreAfterVote).toBe(3);
+    g.resolveRound();
+    expect(g.players.find((p) => p.id === winnerId).score).toBe(3);
+    expect(g.phase).toBe('results');
+    expect(g.castVote('p1', 1)).toBe(false);
+    g.cleanup();
+  });
+});
+
+describe('MemeBattleEngine — нет двойных очков при resolveRound', () => {
+  test('timer + all-voted race не дублирует pointsPerWin', () => {
+    const g = new MemeBattleEngine(mkRoom(3));
+    g.start();
+    g.submitAnswer('p1', 'meme one');
+    g.submitAnswer('p2', 'meme two');
+    expect(g.phase).toBe('voting');
+    g.vote('p0', 0);
+    g.vote('p1', 1);
+    g.vote('p2', 0);
+    const authorId = g._answerIndex[0].authorId;
+    const scoreAfterVotes = g.players.find((p) => p.id === authorId).score;
+    expect(scoreAfterVotes).toBe(g.pointsPerWin);
+    g.resolveRound();
+    expect(g.players.find((p) => p.id === authorId).score).toBe(g.pointsPerWin);
+    expect(g.phase).toBe('results');
     g.cleanup();
   });
 });
