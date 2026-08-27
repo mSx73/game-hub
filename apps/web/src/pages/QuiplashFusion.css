@@ -1,0 +1,74 @@
+/* ============================================================
+   QuiplashFusion — «Острослов» в party-стиле (фиолетовый акцент).
+   Скоуп: .room-page .quiplash-game. Импортируется последним.
+   ============================================================ */
+.room-page .quiplash-game {
+  --qp: #a855f7;
+  --qp2: #7e22ce;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.room-page .quiplash-game .game-area-title { color: #e2c9ff !important; }
+.room-page .quiplash-game::before {
+  background: linear-gradient(90deg, var(--qp), #f472b6, #22d3ee) !important;
+}
+.room-page .quiplash-phase-banner {
+  font-weight: 800 !important;
+  font-size: clamp(1.05rem, 3vw, 1.3rem) !important;
+}
+.room-page .quiplash-timer { color: #fcd34d !important; }
+
+/* ---- Промпт-карточки (фаза ответов) ---- */
+.room-page .quiplash-prompt-card {
+  background: linear-gradient(150deg, rgba(168, 85, 247, 0.16), rgba(168, 85, 247, 0.04)) !important;
+  border: 1px solid rgba(168, 85, 247, 0.3) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+}
+.room-page .quiplash-prompt-text {
+  font-size: clamp(1.2rem, 3.6vw, 1.6rem) !important;
+  font-weight: 800 !important;
+}
+.room-page .quiplash-input {
+  border-radius: 12px !important;
+}
+.room-page .quiplash-input:focus {
+  border-color: var(--qp) !important;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2) !important;
+  outline: none;
+}
+.room-page .quiplash-answer-row button {
+  background: linear-gradient(135deg, var(--qp), var(--qp2)) !important;
+  border: none !important;
+  color: #fff !important;
+  font-weight: 800 !important;
+  box-shadow: 0 8px 20px rgba(168, 85, 247, 0.32) !important;
+}
+
+/* ---- Дуэль / голосование ---- */
+.room-page .quiplash-duel-prompt {
+  font-size: clamp(1.25rem, 4vw, 1.7rem) !important;
+  font-weight: 800 !important;
+}
+.room-page .quiplash-vote-cards { gap: 16px !important; }
+.room-page .quiplash-vote-card {
+  background: linear-gradient(150deg, rgba(168, 85, 247, 0.1), rgba(255, 255, 255, 0.03)) !important;
+  border: 2px solid rgba(168, 85, 247, 0.28) !important;
+  border-radius: 18px !important;
+  font-weight: 700 !important;
+  min-height: 110px !important;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+}
+.room-page .quiplash-vote-card:hover:not(:disabled) {
+  transform: translateY(-4px) !important;
+  border-color: var(--qp) !important;
+  background: rgba(168, 85, 247, 0.18) !important;
+  box-shadow: 0 14px 32px rgba(168, 85, 247, 0.32) !important;
+}
+
+/* ---- Итоги дуэли ---- */
+.room-page .quiplash-reveal-row--sweep {
+  background: linear-gradient(145deg, rgba(251, 191, 36, 0.2), rgba(168, 85, 247, 0.12)) !important;
+  border-color: rgba(251, 191, 36, 0.5) !important;
+}
+.room-page .quiplash-reveal-votes { color: #fcd34d !important; }
