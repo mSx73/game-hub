@@ -93,6 +93,7 @@ export class TwoTruthsEngine extends EventEmitter {
 
   nextGuessRound() {
     if (this._aborted) return;
+    this.phase = 'guessing';
     this.currentPlayerIndex++;
 
     const playersWithFacts = this.players.filter(p => this.facts.has(p.id));

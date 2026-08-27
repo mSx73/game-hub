@@ -5,6 +5,7 @@ import { QuizEngine } from '../games/quiz/QuizEngine.js';
 import { AliasEngine } from '../games/alias/AliasEngine.js';
 import { CaptionEngine } from '../games/caption/CaptionEngine.js';
 import { MemeBattleEngine } from '../games/meme/MemeBattleEngine.js';
+import { TwoTruthsEngine } from '../games/truths/TwoTruthsEngine.js';
 
 const mkRoom = (n, extra = {}) => ({
   code: 'TEST',
@@ -189,6 +190,27 @@ describe('MemeBattleEngine — нет двойных очков при resolveRo
     g.resolveRound();
     expect(g.players.find((p) => p.id === authorId).score).toBe(g.pointsPerWin);
     expect(g.phase).toBe('results');
+    g.cleanup();
+  });
+});
+
+describe('TwoTruthsEngine — guessing phase resumes after resolve', () => {
+  test('nextGuessRound resets phase so later rounds accept guesses', () => {
+    const g = new TwoTruthsEngine(mkRoom(3));
+    for (const p of g.players) {
+      g.facts.set(p.id, {
+        facts: [`${p.name} a`, `${p.name} b`, `${p.name} c`],
+        lieIndex: 2,
+      });
+    }
+    g.phase = 'results';
+    g.currentPlayerIndex = -1;
+    g.nextGuessRound();
+    expect(g.phase).toBe('guessing');
+    expect(g.currentFacts).toBeTruthy();
+    const aboutId = g.currentFacts.playerId;
+    const guesser = g.players.find((p) => p.id !== aboutId);
+    expect(g.submitGuess(guesser.id, 2)).toBe(true);
     g.cleanup();
   });
 });
