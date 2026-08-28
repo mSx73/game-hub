@@ -259,7 +259,7 @@ export class PasswordEngine extends EventEmitter {
   }
 
   resolveRound() {
-    if (this.state === 'ended') return;
+    if (this.state === 'ended' || this.state === 'round-result') return;
     this.state = 'round-result';
     if (this._timerInterval) { clearInterval(this._timerInterval); this._timerInterval = null; }
 

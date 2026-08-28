@@ -5,7 +5,7 @@ import { QuizEngine } from '../games/quiz/QuizEngine.js';
 import { AliasEngine } from '../games/alias/AliasEngine.js';
 import { CaptionEngine } from '../games/caption/CaptionEngine.js';
 import { MemeBattleEngine } from '../games/meme/MemeBattleEngine.js';
-import { TwoTruthsEngine } from '../games/truths/TwoTruthsEngine.js';
+import { PasswordEngine } from '../games/password/PasswordEngine.js';
 
 const mkRoom = (n, extra = {}) => ({
   code: 'TEST',
@@ -144,13 +144,28 @@ describe('KnowFriendEngine — нет двойных очков при resolveRo
 
 describe('PasswordEngine — оффлайн пропускается в ротации ведущего', () => {
   test('nextClueGiver не возвращает оффлайн id', () => {
-    const { PasswordEngine } = require('../games/password/PasswordEngine.js');
     const room = mkRoom(3);
     const g = new PasswordEngine(room);
     g.start();
     room.players[0].isOnline = false;
     g.clueGiverId = 'p0';
     expect(g.nextClueGiver()).toBe('p1');
+    g.cleanup();
+  });
+});
+
+describe('PasswordEngine — resolveRound не дублируется', () => {
+  test('повторный resolveRound не эмитит round:ended снова', () => {
+    const g = new PasswordEngine(mkRoom(2));
+    g.start();
+    g.startRound();
+    g.state = 'guessing';
+    let roundEnded = 0;
+    g.on('round:ended', () => roundEnded++);
+    g.resolveRound();
+    g.resolveRound();
+    expect(g.state).toBe('round-result');
+    expect(roundEnded).toBe(1);
     g.cleanup();
   });
 });
