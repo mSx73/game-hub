@@ -1,0 +1,384 @@
+/* Mobile Responsive Styles for Lobby */
+
+/* ========== MOBILE HEADER ========== */
+@media (max-width: 768px) {
+  .lobby-header {
+    height: auto;
+    min-height: 56px;
+    padding: var(--space-2) var(--space-3);
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .lobby-header-center {
+    flex-direction: column;
+    max-width: none;
+    width: 100%;
+    order: 3;
+    gap: var(--space-1);
+  }
+
+  .alone-checkbox {
+    font-size: var(--text-xs);
+    padding: var(--space-1) var(--space-2);
+  }
+
+  .logo-text {
+    font-size: var(--text-base);
+  }
+
+  .lobby-header-right {
+    gap: var(--space-1);
+  }
+
+  .lobby-secondary-btn {
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--text-xs);
+    min-width: auto;
+    height: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lobby-header {
+    top: 0;
+    padding: var(--space-2);
+  }
+
+  .logo-icon {
+    font-size: 1.25rem;
+  }
+
+  .logo-text {
+    font-size: var(--text-sm);
+  }
+
+  .lobby-header-center input {
+    height: 36px;
+    font-size: var(--text-sm);
+  }
+}
+
+/* ========== MOBILE CONTENT ========== */
+@media (max-width: 768px) {
+  .lobby-content {
+    padding-top: 120px; /* Wrapped header */
+    padding-bottom: 160px;
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+  }
+
+  .game-section-subtitle {
+    font-size: var(--text-base);
+  }
+}
+
+@media (max-width: 480px) {
+  .lobby-content {
+    padding-top: 110px;
+    padding-left: var(--space-2);
+    padding-right: var(--space-2);
+  }
+}
+
+/* ========== MOBILE GAME CARDS ========== */
+@media (max-width: 1024px) {
+  .game-select {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .game-select {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+
+  .game-card {
+    padding: var(--space-3);
+  }
+
+  .game-card-icon {
+    font-size: 2.5rem;
+  }
+
+  .game-card-name {
+    font-size: var(--text-base);
+  }
+
+  .game-card-badge {
+    font-size: var(--text-xs);
+  }
+}
+
+@media (max-width: 480px) {
+  .game-select {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2);
+  }
+
+  .game-card {
+    padding: var(--space-2);
+    min-height: 100px;
+  }
+
+  .game-card-icon {
+    font-size: 2rem;
+  }
+
+  .game-card-name {
+    font-size: var(--text-sm);
+  }
+
+  .game-card-rules {
+    width: 20px;
+    height: 20px;
+    font-size: var(--text-xs);
+  }
+}
+
+@media (max-width: 360px) {
+  .game-select {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========== MOBILE FILTERS ========== */
+@media (max-width: 768px) {
+  .game-filters {
+    padding: var(--space-2);
+    gap: var(--space-2);
+  }
+
+  .filter-chip {
+    padding: var(--space-1) var(--space-3);
+    font-size: var(--text-xs);
+  }
+
+  .player-count-filter {
+    padding: var(--space-2);
+    gap: var(--space-2);
+  }
+
+  .player-count-presets {
+    gap: var(--space-1);
+  }
+
+  .player-count-chip {
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--text-xs);
+    min-width: 24px;
+  }
+}
+
+/* ========== MOBILE FOOTER ========== */
+@media (max-width: 768px) {
+  .lobby-footer {
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .lobby-footer-content {
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: stretch;
+  }
+
+  .selected-game-info {
+    justify-content: center;
+  }
+
+  .selected-game-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+  }
+
+  .selected-game-name {
+    font-size: var(--text-base);
+  }
+
+  .selected-game-desc {
+    font-size: var(--text-xs);
+  }
+
+  .mafia-footer-settings {
+    justify-content: center;
+    gap: var(--space-3);
+  }
+
+  .room-settings-expand {
+    display: flex;
+    justify-content: center;
+  }
+
+  .lobby-main-btn {
+    min-width: auto;
+    width: 100%;
+    height: 48px;
+    font-size: var(--text-base);
+  }
+}
+
+@media (max-width: 480px) {
+  .lobby-footer {
+    padding: var(--space-2);
+  }
+
+  .mafia-players-slider {
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .mafia-players-slider input[type="range"] {
+    width: 100px;
+  }
+}
+
+/* ========== MOBILE MODALS ========== */
+@media (max-width: 768px) {
+  .join-modal {
+    margin: var(--space-3);
+    padding: var(--space-4);
+  }
+
+  .rooms-popover {
+    width: 240px;
+    right: -20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .join-modal {
+    padding: var(--space-3);
+  }
+
+  .join-modal h3 {
+    font-size: var(--text-lg);
+  }
+
+  .join-modal input {
+    height: 44px;
+    font-size: var(--text-base);
+  }
+}
+
+/* ========== MOBILE HOW IT WORKS ========== */
+@media (max-width: 768px) {
+  .how-it-works {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+  }
+
+  .how-step {
+    padding: var(--space-3);
+  }
+
+  .how-step-num {
+    width: 32px;
+    height: 32px;
+    font-size: var(--text-base);
+  }
+
+  .how-step-title {
+    font-size: var(--text-base);
+  }
+}
+
+/* ========== MOBILE DONATION ========== */
+@media (max-width: 768px) {
+  .donation-section {
+    padding: var(--space-4);
+    margin-top: var(--space-6);
+  }
+
+  .donation-icon {
+    font-size: 2rem;
+  }
+
+  .donation-title {
+    font-size: var(--text-lg);
+  }
+
+  .donation-text {
+    font-size: var(--text-sm);
+  }
+
+  .donation-btn {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-sm);
+  }
+}
+
+/* ========== TOUCH FRIENDLY ========== */
+@media (pointer: coarse) {
+  .game-card:hover {
+    transform: none;
+  }
+
+  .game-card:active {
+    transform: scale(0.98);
+  }
+
+  .filter-chip:hover {
+    transform: none;
+  }
+
+  .filter-chip:active {
+    transform: scale(0.95);
+  }
+
+  .game-card-rules {
+    opacity: 1;
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* ========== ALONE CHECKBOX STYLES ========== */
+.alone-checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.alone-checkbox:hover {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.alone-checkbox input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--color-primary-500);
+  cursor: pointer;
+}
+
+.alone-checkbox span {
+  font-weight: var(--font-medium);
+}
+
+/* ========== SAFE AREA INSETS ========== */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .lobby-header {
+    padding-top: max(var(--space-2), env(safe-area-inset-top));
+  }
+
+  .lobby-footer {
+    padding-bottom: max(var(--space-2), env(safe-area-inset-bottom));
+  }
+
+  .lobby-content {
+    padding-left: max(var(--space-4), env(safe-area-inset-left));
+    padding-right: max(var(--space-4), env(safe-area-inset-right));
+  }
+}

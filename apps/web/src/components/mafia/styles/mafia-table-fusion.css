@@ -1,0 +1,321 @@
+/* ============================================================
+   Mafia Table — Fusion: кинематографичный нуар-стол.
+   Импортируется последним → переопределяет default-тему стола.
+   Скоуп: .mafia-table-container (default theme; noir/cyber не трогаем).
+   ============================================================ */
+
+.mafia-table-container {
+  --felt-1: #34121a;     /* oxblood highlight */
+  --felt-2: #1e0a10;     /* deep velvet */
+  --felt-edge: #0a0406;  /* near-black rim */
+  --brass: #c9a35b;
+  --brass-soft: rgba(201, 163, 91, 0.5);
+}
+
+/* ---------- Фетр стола ---------- */
+.mafia-table-container:not(.theme-noir):not(.theme-cyber) .mafia-table {
+  max-width: 760px;
+  aspect-ratio: 5 / 3.05;
+  max-height: 460px;
+  border-radius: 50%;
+  border: none;
+  background:
+    radial-gradient(ellipse 60% 48% at 50% 42%, rgba(255, 255, 255, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 100% at 50% 52%, var(--felt-1) 0%, var(--felt-2) 56%, var(--felt-edge) 100%);
+  box-shadow:
+    0 34px 90px rgba(0, 0, 0, 0.78),
+    inset 0 0 0 10px rgba(0, 0, 0, 0.4),
+    inset 0 0 0 12px var(--brass-soft),
+    inset 0 0 0 13px rgba(0, 0, 0, 0.5),
+    inset 0 0 140px rgba(0, 0, 0, 0.65);
+}
+
+/* Внутреннее фетровое кольцо */
+.mafia-table-container:not(.theme-noir):not(.theme-cyber) .mafia-table::before {
+  inset: 12%;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 163, 91, 0.12);
+  background: radial-gradient(ellipse at 50% 45%, rgba(201, 163, 91, 0.05), transparent 65%);
+  box-shadow: inset 0 0 70px rgba(0, 0, 0, 0.55);
+}
+
+/* ---------- Центральная эмблема фазы ---------- */
+.mafia-table-container .mafia-table-center {
+  gap: 8px;
+}
+.mafia-table-container .mafia-center-emblem {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle, rgba(201, 163, 91, 0.14) 0%, transparent 68%);
+  animation: m-center-breathe 4.5s ease-in-out infinite;
+}
+.mafia-table-container .mafia-center-glyph {
+  font-size: 3rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 20px rgba(201, 163, 91, 0.45));
+}
+.mafia-table-center--night .mafia-center-glyph { filter: drop-shadow(0 0 24px rgba(130, 170, 255, 0.55)); }
+.mafia-table-center--voting .mafia-center-glyph { filter: drop-shadow(0 0 24px rgba(224, 80, 80, 0.55)); }
+.mafia-table-center--gameover .mafia-center-glyph { filter: drop-shadow(0 0 24px rgba(251, 191, 36, 0.6)); }
+.mafia-table-container .mafia-center-phase {
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.88);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+}
+.mafia-table-container .mafia-center-alive {
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.46);
+}
+
+@keyframes m-center-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.07); opacity: 1; }
+}
+
+/* ---------- Нуар-аватары игроков ---------- */
+.mafia-table-container .player-seat .player-avatar {
+  width: 58px !important;
+  height: 58px !important;
+  background: radial-gradient(circle at 38% 28%, #423a44 0%, #1a141d 75%) !important;
+  border: 2px solid var(--brass) !important;
+  color: #f3e7cf !important;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 1.2rem !important;
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.6),
+    inset 0 2px 6px rgba(255, 255, 255, 0.14),
+    0 0 0 4px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Состояния */
+.mafia-table-container .player-seat.alive .player-avatar {
+  border-color: var(--brass) !important;
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.6),
+    inset 0 2px 6px rgba(255, 255, 255, 0.14),
+    0 0 0 4px rgba(0, 0, 0, 0.45),
+    0 0 18px rgba(201, 163, 91, 0.22) !important;
+}
+.mafia-table-container .player-seat.dead .player-avatar {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  filter: grayscale(100%) brightness(0.45) !important;
+  opacity: 0.5 !important;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.6) !important;
+}
+.mafia-table-container .player-seat.dead { transform: translate(-50%, -100%) rotate(-4deg); }
+.mafia-table-container .player-seat.targeted .player-avatar,
+.mafia-table-container .player-seat.targetable:hover .player-avatar {
+  border-color: #e0364a !important;
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.6),
+    0 0 0 4px rgba(224, 54, 74, 0.25),
+    0 0 26px rgba(224, 54, 74, 0.5) !important;
+}
+.mafia-table-container .player-seat.is-self .player-avatar {
+  border-color: #ffd87a !important;
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.6),
+    inset 0 2px 6px rgba(255, 255, 255, 0.18),
+    0 0 0 4px rgba(255, 216, 122, 0.18),
+    0 0 22px rgba(255, 216, 122, 0.4) !important;
+}
+
+/* Брасс-номер места */
+.mafia-table-container .player-seat-number {
+  width: 20px !important;
+  height: 20px !important;
+  background: linear-gradient(135deg, var(--brass), #8a6c30) !important;
+  border: 1px solid rgba(0, 0, 0, 0.5) !important;
+  color: #1a0f06 !important;
+  font-size: 0.6rem !important;
+  font-weight: 800 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Табличка с именем */
+.mafia-table-container .player-name {
+  margin-top: 7px !important;
+  background: rgba(8, 5, 10, 0.82) !important;
+  border: 1px solid rgba(201, 163, 91, 0.28) !important;
+  border-radius: 999px !important;
+  padding: 3px 11px !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  color: #e8dcc4 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55) !important;
+  max-width: 92px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mafia-table-container .player-seat.dead .player-name {
+  color: rgba(255, 255, 255, 0.4) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Чуть меньше «мёртвого» низа под столом */
+.mafia-table-container .mafia-table-body {
+  padding-bottom: 96px;
+}
+
+/* ============================================================
+   Нуар-обвязка экрана (топбар + панели ведущего) — сцепка со столом.
+   Классы уникальны для мафии → безопасно глобально.
+   ============================================================ */
+.mafia-noir-topbar {
+  background: linear-gradient(180deg, rgba(28, 12, 16, 0.92), rgba(12, 8, 10, 0.88)) !important;
+  border-bottom: 1px solid rgba(201, 163, 91, 0.28) !important;
+}
+.mafia-noir-topbar__brand {
+  background: linear-gradient(100deg, #e8dcc4, #c9a35b 55%, #e8dcc4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  letter-spacing: 0.06em !important;
+}
+.mafia-noir-topbar__brand::before {
+  content: '';
+  width: 9px; height: 9px; border-radius: 50%;
+  background: #e0364a;
+  box-shadow: 0 0 12px rgba(224, 54, 74, 0.8);
+  -webkit-text-fill-color: initial;
+}
+
+.mafia-noir-card {
+  border: 1px solid rgba(201, 163, 91, 0.2) !important;
+  background: linear-gradient(180deg, rgba(28, 14, 18, 0.7), rgba(12, 8, 10, 0.82)) !important;
+  position: relative;
+}
+.mafia-noir-card::before {
+  content: '';
+  position: absolute; top: 0; left: 14px; right: 14px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 163, 91, 0.5), transparent);
+}
+.mafia-noir-card__head { border-bottom-color: rgba(201, 163, 91, 0.18) !important; }
+.mafia-noir-card__head h3 { color: #cbb489 !important; }
+.mafia-noir-card--host {
+  background: linear-gradient(180deg, rgba(52, 18, 26, 0.62), rgba(12, 8, 10, 0.85)) !important;
+}
+
+/* Кнопки ведущего */
+.mafia-noir-host-actions { display: grid; gap: 8px; padding: 10px 12px; }
+.mafia-noir-host-actions button {
+  width: 100%;
+  border-radius: 11px;
+  border: 1px solid rgba(201, 163, 91, 0.32);
+  background: rgba(201, 163, 91, 0.08);
+  color: #e8dcc4;
+  font-weight: 700;
+  font-size: 0.86rem;
+  padding: 11px 14px;
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease, transform 0.12s ease;
+}
+.mafia-noir-host-actions button:hover {
+  background: rgba(201, 163, 91, 0.18);
+  border-color: rgba(201, 163, 91, 0.55);
+  transform: translateY(-1px);
+}
+.mafia-noir-host-actions button:active { transform: translateY(0); }
+
+.mafia-noir-empty { color: rgba(232, 220, 196, 0.4) !important; font-style: italic; }
+
+/* ============================================================
+   Панели игрока (ночное действие / голосование / карта роли) —
+   единый нуар-язык: брасс-аватары, кримсон-акцент голосования.
+   ============================================================ */
+
+/* ---- Ночная панель действий ---- */
+.mafia-table-container .mafia-action-panel {
+  background: linear-gradient(180deg, rgba(30, 15, 19, 0.97), rgba(10, 7, 9, 0.98)) !important;
+  border: 1px solid rgba(201, 163, 91, 0.3) !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.78), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+.mafia-table-container .mafia-action-header h4 { color: #e8dcc4 !important; }
+.mafia-table-container .mafia-action-target { border-color: rgba(201, 163, 91, 0.2) !important; }
+.mafia-table-container .mafia-action-target.selected {
+  border-color: #e0364a !important;
+  background: rgba(224, 54, 74, 0.14) !important;
+}
+.mafia-table-container .mafia-action-target-avatar {
+  background: radial-gradient(circle at 38% 28%, #423a44, #1a141d) !important;
+  border: 1.5px solid var(--brass) !important;
+  color: #f3e7cf !important;
+  font-family: var(--font-display, sans-serif);
+}
+.mafia-table-container .mafia-action-confirm {
+  background: linear-gradient(135deg, #e0364a, #a01828) !important;
+  border: none !important;
+  color: #fff !important;
+  font-weight: 800 !important;
+  box-shadow: 0 8px 22px rgba(224, 54, 74, 0.35) !important;
+}
+
+/* ---- Голосование (кримсон — изгнание) ---- */
+.mafia-table-container .vote-booth {
+  background: linear-gradient(180deg, rgba(30, 15, 19, 0.97), rgba(10, 7, 9, 0.98)) !important;
+  border: 1px solid rgba(224, 54, 74, 0.32) !important;
+}
+.mafia-table-container .vote-booth-title { color: #f1d4d4 !important; }
+.mafia-table-container .vote-candidate-card { border-color: rgba(201, 163, 91, 0.2) !important; }
+.mafia-table-container .vote-candidate-card:hover:not(:disabled) {
+  border-color: #e0364a !important;
+  background: rgba(224, 54, 74, 0.1) !important;
+}
+.mafia-table-container .vote-candidate-avatar {
+  background: radial-gradient(circle at 38% 28%, #423a44, #1a141d) !important;
+  border: 1.5px solid var(--brass) !important;
+  color: #f3e7cf !important;
+  font-family: var(--font-display, sans-serif);
+}
+.mafia-table-container .vote-count-badge { background: #e0364a !important; color: #fff !important; }
+.mafia-table-container .vote-candidate-bar,
+.mafia-table-container .vote-result-bar {
+  background: linear-gradient(90deg, #e0364a, #ff7a7a) !important;
+}
+.mafia-table-container .vote-progress-pill { border-color: rgba(201, 163, 91, 0.32) !important; }
+.mafia-table-container .vote-progress-voted { color: #ffb4b4 !important; }
+
+/* ---- Кнопка «Понятно» на карте роли → цвет роли ---- */
+.mafia-role-reveal-overlay .role-card-scene .btn {
+  border-color: var(--role-color, var(--brass)) !important;
+  color: #fff !important;
+  background: color-mix(in srgb, var(--role-color, #c9a35b) 22%, transparent) !important;
+  font-weight: 800 !important;
+}
+
+/* ---- Нижний бар (Готов / Голос / Меню) ---- */
+.mafia-noir-bottom-nav {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  width: min(460px, calc(100vw - 24px)) !important;
+  border: 1px solid rgba(201, 163, 91, 0.26) !important;
+  background: linear-gradient(180deg, rgba(26, 13, 17, 0.92), rgba(10, 7, 9, 0.94)) !important;
+}
+.mafia-noir-bottom-nav button { color: #cbb489 !important; border-radius: 16px !important; }
+.mafia-noir-bottom-nav button:hover:not(:disabled) {
+  background: rgba(201, 163, 91, 0.14) !important;
+  color: #f3e7cf !important;
+}
+.mafia-noir-bottom-nav button:nth-child(2):hover:not(:disabled) {
+  background: rgba(224, 54, 74, 0.16) !important;
+  color: #ffd0d0 !important;
+}
+.mafia-noir-bottom-nav button:disabled { opacity: 0.38 !important; }
+
+/* В нуар-режиме нуар-топбар + нижний бар заменяют шапку GameLayout —
+   прячем дублирующий .game-header/.mobile-controls (накладывались сверху). */
+.room-page--mafia-playing .game-header,
+.room-page--mafia-playing .mobile-controls {
+  display: none !important;
+}
