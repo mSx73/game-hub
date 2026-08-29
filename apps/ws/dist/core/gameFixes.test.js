@@ -6,6 +6,7 @@ import { AliasEngine } from '../games/alias/AliasEngine.js';
 import { CaptionEngine } from '../games/caption/CaptionEngine.js';
 import { MemeBattleEngine } from '../games/meme/MemeBattleEngine.js';
 import { PasswordEngine } from '../games/password/PasswordEngine.js';
+import { HatEngine } from '../games/hat/HatEngine.js';
 
 const mkRoom = (n, extra = {}) => ({
   code: 'TEST',
@@ -258,5 +259,42 @@ describe('StoryEngine — noTimeLimit и оффлайн', () => {
     expect(g.players[g.currentTurnIndex].id).toBe('p1'); // p0 пропущен
     g.cleanup();
     jest.useRealTimers();
+  });
+});
+
+describe('HatEngine — late guesses after round ends', () => {
+  test('guess after timer endRound does not score or call endRound again', () => {
+    const room = mkRoom(4);
+    const g = new HatEngine(room);
+    g.words = [{ text: 'яблоко', guessed: false, skipped: false, author: 'p0' }];
+    g.currentRound = 1;
+    g.currentTeam = 0;
+    g.startRound();
+    const word = g.currentWord.text;
+    const teamBefore = g.currentTeam;
+    const guesser = g.teams.get(teamBefore).find((p) => p.id !== g.currentExplainer);
+    const scoreBefore = guesser.score;
+    let roundEnded = 0;
+    g.on('round:ended', () => roundEnded++);
+    g.endRound();
+    expect(g.currentTeam).toBe((teamBefore + 1) % 2);
+    expect(g.guessWord(guesser.id, word)).toBe(false);
+    expect(guesser.score).toBe(scoreBefore);
+    g.endRound();
+    expect(roundEnded).toBe(1);
+    g.cleanup();
+  });
+
+  test('confirmManualGuess rejected after endRound', () => {
+    const room = mkRoom(4);
+    const g = new HatEngine(room);
+    g.words = [{ text: 'груша', guessed: false, skipped: false, author: 'p0' }];
+    g.startRound();
+    const explainer = g.currentExplainer;
+    const guesser = g.teams.get(g.currentTeam).find((p) => p.id !== explainer);
+    g.endRound();
+    const res = g.confirmManualGuess(explainer, guesser.id);
+    expect(res.ok).toBe(false);
+    g.cleanup();
   });
 });

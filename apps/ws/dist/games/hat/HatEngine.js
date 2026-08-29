@@ -25,6 +25,8 @@ export class HatEngine extends EventEmitter {
     this._aborted = false;
     this._dictionaryStatusTimeout = null;
     this._roundDelayTimeout = null;
+    /** Prevents late guesses / double endRound after timer expiry or round transition */
+    this._roundEnding = false;
     /** Счётчик хода внутри одного таймерного раунда: после каждого слова объясняет следующий из команды */
     this._explainTurnIndex = 0;
     this.setupTeams();
@@ -187,7 +189,7 @@ export class HatEngine extends EventEmitter {
 
   /** Объясняющий засчитывает угадывание напрямую (без точного совпадения в чате) */
   confirmManualGuess(explainerSocketId, guesserId) {
-    if (this._aborted || !this.currentWord) return { ok: false, error: 'Нет активного слова' };
+    if (this._aborted || this._roundEnding || !this.currentWord) return { ok: false, error: 'Нет активного слова' };
     if (explainerSocketId !== this.currentExplainer) return { ok: false, error: 'Только объясняющий может засчитать угадывание' };
     if (guesserId === this.currentExplainer) return { ok: false, error: 'Нельзя засчитать себя' };
     const teamPlayers = this._activeTeamPlayers();
@@ -248,6 +250,7 @@ export class HatEngine extends EventEmitter {
   }
   startRound() {
     if (this._aborted) return;
+    this._roundEnding = false;
     const teamPlayers = (this.teams.get(this.currentTeam) ?? []).filter(
       (p) => this.room.players.find((r) => r.id === p.id)?.isOnline !== false
     );
@@ -290,7 +293,7 @@ export class HatEngine extends EventEmitter {
     this._emitScoreboard();
   }
   guessWord(guesserId, guess) {
-    if (!this.currentWord) return false;
+    if (this._roundEnding || !this.currentWord) return false;
     if (guesserId === this.currentExplainer) return false;
     const normalize = (s) => (s || '').trim().toLowerCase().replace(/ё/g, 'е').replace(/\s+/g, ' ').trim();
     const normalized = normalize(guess);
@@ -306,7 +309,7 @@ export class HatEngine extends EventEmitter {
   }
 
   skipWord() {
-    if (!this.currentWord) return;
+    if (this._roundEnding || !this.currentWord) return;
     this.currentWord.skipped = true;
     if (this.skipPenalty !== 0) {
       const teamPlayers = this.teams.get(this.currentTeam) ?? [];
@@ -331,6 +334,9 @@ export class HatEngine extends EventEmitter {
     }
   }
   endRound() {
+    if (this._roundEnding) return;
+    this._roundEnding = true;
+    this.currentWord = null;
     if (this.roundTimer) {
       clearInterval(this.roundTimer);
       this.roundTimer = null;
