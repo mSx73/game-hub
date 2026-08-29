@@ -1,0 +1,901 @@
+/* Общие стили для игр */
+
+.game-waiting,
+.game-countdown,
+.game-active,
+.game-finished,
+.game-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.game-description {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 2rem;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+/* Список игроков */
+.players-ready-list {
+  width: 100%;
+  margin: 2rem 0;
+}
+
+.players-ready-list h3 {
+  margin-bottom: 1rem;
+  color: #00dbde;
+  font-size: 1.2rem;
+}
+
+.players-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.player-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.player-card.ready {
+  border-color: #28a745;
+  background: rgba(40, 167, 69, 0.1);
+}
+
+.player-card.not-ready {
+  border-color: #ffc107;
+  background: rgba(255, 193, 7, 0.1);
+}
+
+.player-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+}
+
+.player-info {
+  flex: 1;
+  text-align: left;
+}
+
+.player-name {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.player-status {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Кнопки */
+.game-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  margin: 1rem;
+}
+
+.game-button:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+}
+
+.game-button:active:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.game-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ready-btn {
+  background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+  box-shadow: 0 4px 15px rgba(0, 176, 155, 0.3);
+}
+
+/* Обратный отсчёт */
+.game-countdown {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.countdown-number {
+  font-size: 8rem;
+  font-weight: 900;
+  color: #ff416c;
+  text-shadow: 0 0 30px rgba(255, 65, 108, 0.5);
+  margin: 1rem 0;
+  line-height: 1;
+}
+
+.countdown-bar {
+  width: 300px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  margin: 2rem 0;
+  overflow: hidden;
+}
+
+.countdown-progress {
+  height: 100%;
+  background: linear-gradient(90deg, #ff416c, #ff4b2b);
+  border-radius: 5px;
+  transition: width 1s linear;
+}
+
+/* Активная игра */
+.game-active h2 {
+  font-size: 2.5rem;
+  color: #ffc107;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 20px rgba(255, 193, 7, 0.3);
+}
+
+.signal-indicator {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 2rem 0;
+}
+
+.signal-pulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 4px solid #00dbde;
+  border-radius: 50%;
+  animation: pulse-ring 2s infinite;
+}
+
+.signal-pulse.delay-1 {
+  animation-delay: 0.66s;
+}
+
+.signal-pulse.delay-2 {
+  animation-delay: 1.33s;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.reaction-button {
+  background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 1.5rem 4rem;
+  font-size: 1.8rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 8px 30px rgba(255, 65, 108, 0.4);
+  margin: 2rem 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.reaction-button:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 12px 40px rgba(255, 65, 108, 0.6);
+}
+
+.reaction-button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.reaction-button:disabled {
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+  cursor: not-allowed;
+}
+
+.reaction-result {
+  background: rgba(0, 219, 222, 0.1);
+  border: 2px solid #00dbde;
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  margin: 1rem 0;
+  font-size: 1.2rem;
+}
+
+.players-reacting {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.player-reaction {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.8rem 1.2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  min-width: 120px;
+}
+
+.player-name {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.player-status {
+  font-size: 0.9rem;
+  color: #28a745;
+}
+
+/* Завершённая игра */
+.game-finished {
+  animation: slideIn 0.5s ease;
+}
+
+.winner-announcement {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 193, 7, 0.2) 100%);
+  border: 2px solid #ffd700;
+  border-radius: 20px;
+  padding: 2rem;
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.winner-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.scoreboard {
+  width: 100%;
+  max-width: 600px;
+  margin: 2rem 0;
+}
+
+.scores-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.scores-table th {
+  background: rgba(0, 123, 255, 0.3);
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #00dbde;
+}
+
+.scores-table td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.scores-table tr:last-child td {
+  border-bottom: none;
+}
+
+.scores-table tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.winner-row {
+  background: rgba(255, 215, 0, 0.1) !important;
+  font-weight: 600;
+}
+
+.winner-row td:first-child {
+  position: relative;
+}
+
+.winner-row td:first-child::before {
+  content: '👑';
+  position: absolute;
+  left: -30px;
+}
+
+/* Загрузка */
+.game-loading {
+  min-height: 400px;
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top: 4px solid #00dbde;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 2rem auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .players-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .countdown-number {
+    font-size: 6rem;
+  }
+  
+  .reaction-button {
+    padding: 1.2rem 2.5rem;
+    font-size: 1.4rem;
+  }
+  
+  .signal-indicator {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .scores-table {
+    font-size: 0.9rem;
+  }
+  
+  .scores-table th,
+  .scores-table td {
+    padding: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-waiting,
+  .game-countdown,
+  .game-active,
+  .game-finished {
+    padding: 1rem;
+  }
+  
+  .countdown-number {
+    font-size: 4rem;
+  }
+  
+  .reaction-button {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+  }
+  
+  .game-button {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+/* Стили для игры Colors */
+.color-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem 0;
+}
+
+.color-square {
+  width: 200px;
+  height: 200px;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.color-info {
+  text-align: center;
+}
+
+.color-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0.5rem 0;
+}
+
+.color-hex {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: monospace;
+}
+
+.color-options {
+  width: 100%;
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.color-option {
+  height: 100px;
+  border-radius: 12px;
+  border: 3px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.color-option:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.color-option.selected {
+  border-width: 4px;
+  transform: scale(1.05);
+}
+
+.color-option.correct {
+  border-color: #28a745 !important;
+  box-shadow: 0 0 20px rgba(40, 167, 69, 0.5);
+}
+
+.color-option.wrong {
+  border-color: #ff4757 !important;
+  box-shadow: 0 0 20px rgba(255, 71, 87, 0.5);
+}
+
+.option-text {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.option-status {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 1.2rem;
+}
+
+.timer-display {
+  width: 100%;
+  max-width: 400px;
+  margin: 2rem auto;
+}
+
+.timer-bar {
+  width: 100%;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.timer-progress {
+  height: 100%;
+  background: linear-gradient(90deg, #00dbde, #fc00ff);
+  border-radius: 5px;
+  transition: width 1s linear;
+}
+
+.timer-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  color: #00dbde;
+}
+
+.round-info {
+  background: rgba(0, 123, 255, 0.2);
+  border-radius: 20px;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 1rem 0;
+}
+
+.selection-result {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.result-correct {
+  color: #28a745;
+  background: rgba(40, 167, 69, 0.1);
+  border: 2px solid #28a745;
+}
+
+.result-wrong {
+  color: #ff4757;
+  background: rgba(255, 71, 87, 0.1);
+  border: 2px solid #ff4757;
+}
+
+.lives-display {
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+}
+
+/* Стили для игры TeamWords */
+.teams-display {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.team-card {
+  flex: 1;
+  min-width: 250px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.team-card.active {
+  border-color: #ffd700;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+}
+
+.team-header {
+  padding: 1rem;
+  text-align: center;
+  color: white;
+}
+
+.team-header.red {
+  background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
+}
+
+.team-header.blue {
+  background: linear-gradient(135deg, #3742fa 0%, #4b7bec 100%);
+}
+
+.team-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.team-score {
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin-top: 0.5rem;
+}
+
+.team-players {
+  padding: 1rem;
+}
+
+.team-player {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.team-player:last-child {
+  border-bottom: none;
+}
+
+.player-score {
+  font-weight: 600;
+  color: #00dbde;
+}
+
+.vs-separator {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #ffd700;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.game-explaining {
+  width: 100%;
+}
+
+.explainer-view, .guesser-view {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 2rem 0;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.word-display {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.word-text {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #00dbde;
+  margin: 1rem 0;
+  text-shadow: 0 0 20px rgba(0, 219, 222, 0.5);
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  border: 2px solid #00dbde;
+}
+
+.explainer-instruction {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.game-stats {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  min-width: 120px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #00dbde;
+}
+
+.skip-btn {
+  background: linear-gradient(135deg, #ffa502 0%, #ff7f50 100%);
+  box-shadow: 0 4px 15px rgba(255, 165, 2, 0.3);
+}
+
+.guess-form {
+  display: flex;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.guess-input {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 1.1rem;
+  transition: all 0.2s;
+}
+
+.guess-input:focus {
+  outline: none;
+  border-color: #00dbde;
+  box-shadow: 0 0 0 3px rgba(0, 219, 222, 0.2);
+}
+
+.guess-btn {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #00dbde 0%, #fc00ff 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.guess-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 219, 222, 0.3);
+}
+
+.guess-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.recent-words {
+  margin-top: 2rem;
+}
+
+.words-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.word-tag {
+  background: rgba(0, 123, 255, 0.2);
+  border: 1px solid rgba(0, 123, 255, 0.4);
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.result-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.result-label {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.5rem;
+}
+
+.result-value {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #00dbde;
+}
+
+.words-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.word-item {
+  background: rgba(40, 167, 69, 0.1);
+  border: 1px solid rgba(40, 167, 69, 0.3);
+  border-radius: 8px;
+  padding: 0.8rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.final-scores {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 1rem 0;
+}
+
+.final-score {
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.final-score.red {
+  background: rgba(255, 71, 87, 0.1);
+  border: 2px solid #ff4757;
+  color: #ff4757;
+}
+
+.final-score.blue {
+  background: rgba(55, 66, 250, 0.1);
+  border: 2px solid #3742fa;
+  color: #3742fa;
+}
+
+/* Анимации */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease;
+}
+
+/* Уведомления */
+.game-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+  max-width: 300px;
+  font-weight: 500;
+}
+
+@keyframes fadeOut {
+  to { opacity: 0; transform: translateY(-10px); }
+}
