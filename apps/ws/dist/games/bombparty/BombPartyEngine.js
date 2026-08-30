@@ -64,6 +64,8 @@ export class BombPartyEngine extends EventEmitter {
       clearTimeout(this._roundDelayTimeout);
       this._roundDelayTimeout = null;
     }
+    // После bombExploded/handleChat фаза «results» — без этого handleChat молчит со 2-го раунда
+    this.phase = 'playing';
     if (this.round >= this.maxRounds) {
       this.endGame();
       return;

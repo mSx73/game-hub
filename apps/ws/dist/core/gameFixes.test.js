@@ -7,6 +7,9 @@ import { CaptionEngine } from '../games/caption/CaptionEngine.js';
 import { MemeBattleEngine } from '../games/meme/MemeBattleEngine.js';
 import { PasswordEngine } from '../games/password/PasswordEngine.js';
 import { HatEngine } from '../games/hat/HatEngine.js';
+import { WordChainEngine } from '../games/wordchain/WordChainEngine.js';
+import { LastWordEngine } from '../games/lastword/LastWordEngine.js';
+import { SequenceEngine } from '../games/sequence/SequenceEngine.js';
 
 const mkRoom = (n, extra = {}) => ({
   code: 'TEST',
@@ -259,6 +262,46 @@ describe('StoryEngine — noTimeLimit и оффлайн', () => {
     expect(g.players[g.currentTurnIndex].id).toBe('p1'); // p0 пропущен
     g.cleanup();
     jest.useRealTimers();
+  });
+});
+
+describe('WordChainEngine — playing phase resumes after endRound', () => {
+  test('nextRound resets phase so round 2 accepts chat', () => {
+    const g = new WordChainEngine(mkRoom(2));
+    g.start();
+    g.endRound();
+    expect(g.phase).toBe('results');
+    g.nextRound();
+    expect(g.phase).toBe('playing');
+    expect(g.handleChat('p0', 'кот')).toBe(true);
+    g.cleanup();
+  });
+});
+
+describe('LastWordEngine — playing phase resumes after endRound', () => {
+  test('nextRound resets phase so round 2 accepts words', () => {
+    const g = new LastWordEngine(mkRoom(2));
+    g.start();
+    g.endRound();
+    expect(g.phase).toBe('results');
+    g.nextRound();
+    expect(g.phase).toBe('playing');
+    expect(g.handleChat('p0', 'яблоко')).toBe(true);
+    g.cleanup();
+  });
+});
+
+describe('SequenceEngine — playing phase resumes after endRound', () => {
+  test('nextRound resets phase so round 2 accepts answers', () => {
+    const g = new SequenceEngine(mkRoom(2));
+    g.start();
+    g.endRound();
+    expect(g.phase).toBe('results');
+    g.nextRound();
+    expect(g.phase).toBe('playing');
+    expect(g.currentSeq).toBeTruthy();
+    expect(g.handleChat('p0', String(g.currentSeq.answer))).toBe(true);
+    g.cleanup();
   });
 });
 

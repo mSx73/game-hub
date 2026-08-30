@@ -84,6 +84,8 @@ export class LastWordEngine extends EventEmitter {
       clearTimeout(this._roundDelayTimeout);
       this._roundDelayTimeout = null;
     }
+    // После endRound() фаза «results» — без этого handleChat не принимает слова со 2-го раунда
+    this.phase = 'playing';
     this.round++;
     if (this.round > this.maxRounds) { this.endGame(); return; }
 

@@ -58,6 +58,8 @@ export class SequenceEngine extends EventEmitter {
       clearTimeout(this._roundDelayTimeout);
       this._roundDelayTimeout = null;
     }
+    // После endRound() фаза «results» — без этого handleChat не принимает ответы со 2-го раунда
+    this.phase = 'playing';
     this.round++;
     if (this.round > this.maxRounds) {
       this.endGame();

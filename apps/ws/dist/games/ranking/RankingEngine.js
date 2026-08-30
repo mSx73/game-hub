@@ -59,6 +59,8 @@ export class RankingEngine extends EventEmitter {
       clearTimeout(this._roundDelayTimeout);
       this._roundDelayTimeout = null;
     }
+    // После resolveRound() фаза «results» — без этого submitRanking отклоняется со 2-го раунда
+    this.phase = 'playing';
     this.round++;
     if (this.round > this.maxRounds) { this.endGame(); return; }
 
