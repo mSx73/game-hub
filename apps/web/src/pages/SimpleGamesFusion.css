@@ -1,0 +1,186 @@
+/* ============================================================
+   SimpleGamesFusion — полировка простых игр (Квиз, Флаги) + общий
+   компактный код-хедер во время игры. Импортируется последним.
+   ============================================================ */
+
+/* ---------- Компактный код-комнаты во время игры (не в лобби) ---------- */
+.room-page:not(.room-page--lobby) .room-id-container {
+  max-width: 460px;
+  margin: 0 auto 14px;
+  padding: 10px 16px !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 14px;
+}
+.room-page:not(.room-page--lobby) .room-id-container [data-testid="room-title"] { display: none !important; }
+.room-page:not(.room-page--lobby) .room-id {
+  display: inline-block !important;
+  font-size: 1.1rem !important;
+  letter-spacing: 0.18em !important;
+  padding: 6px 14px !important;
+  margin: 0 !important;
+  border-style: solid !important;
+  border-width: 1px !important;
+}
+.room-page:not(.room-page--lobby) .room-copy-buttons { margin: 0 !important; }
+.room-page:not(.room-page--lobby) .room-copy-buttons .btn {
+  padding: 7px 12px !important;
+  font-size: 0.8rem !important;
+}
+
+/* ============================================================
+   КВИЗ — плитки-ответы в стиле Kahoot/Jackbox (синяя тема)
+   ============================================================ */
+.room-page .quiz-game { max-width: 760px; margin: 0 auto; }
+
+.room-page .quiz-game .quiz-question {
+  font-size: clamp(1.25rem, 3vw, 1.6rem) !important;
+  font-weight: 800 !important;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.16), rgba(59, 130, 246, 0.04));
+  border: 1px solid rgba(59, 130, 246, 0.28);
+  border-radius: 18px;
+  padding: 24px 26px !important;
+  min-height: auto !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+}
+
+.room-page .quiz-game .quiz-options { gap: 12px !important; }
+
+.room-page .quiz-game .quiz-option {
+  border: none !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  font-size: 1.05rem !important;
+  text-align: left !important;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 66px;
+  padding: 16px 20px !important;
+  border-radius: 16px !important;
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.32), 0 10px 22px rgba(0, 0, 0, 0.28);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease !important;
+}
+/* фигурка-маркер, как в Kahoot */
+.room-page .quiz-game .quiz-option::before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.92);
+}
+.room-page .quiz-game .quiz-option:nth-child(1) { background: linear-gradient(135deg, #ef4444, #dc2626); }
+.room-page .quiz-game .quiz-option:nth-child(1)::before { clip-path: polygon(50% 0, 0 100%, 100% 100%); }
+.room-page .quiz-game .quiz-option:nth-child(2) { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.room-page .quiz-game .quiz-option:nth-child(2)::before { clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+.room-page .quiz-game .quiz-option:nth-child(3) { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.room-page .quiz-game .quiz-option:nth-child(3)::before { border-radius: 50%; }
+.room-page .quiz-game .quiz-option:nth-child(4) { background: linear-gradient(135deg, #22c55e, #16a34a); }
+.room-page .quiz-game .quiz-option:nth-child(4)::before { border-radius: 5px; }
+
+.room-page .quiz-game .quiz-option:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.08); }
+.room-page .quiz-game .quiz-option:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.32); }
+.room-page .quiz-game .quiz-option.selected {
+  box-shadow: 0 0 0 3px #fff, 0 10px 24px rgba(0, 0, 0, 0.4) !important;
+}
+.room-page .quiz-game .quiz-option:disabled:not(.correct):not(.wrong) {
+  opacity: 0.35 !important;
+  filter: grayscale(0.7);
+}
+.room-page .quiz-game .quiz-option.correct {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  color: #fff !important;
+  opacity: 1 !important;
+  box-shadow: 0 0 0 3px #6ee7b7, 0 10px 24px rgba(16, 185, 129, 0.45) !important;
+}
+.room-page .quiz-game .quiz-option.wrong {
+  background: linear-gradient(135deg, #ef4444, #b91c1c) !important;
+  color: #fff !important;
+  opacity: 0.9 !important;
+}
+
+/* ============================================================
+   ФЛАГИ — карточка флага (небесная тема)
+   ============================================================ */
+.room-page .flags-game .flags-meta-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 4px 0 14px;
+}
+.room-page .flags-round-badge,
+.room-page .flags-timer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  color: #bfe3fb;
+}
+.room-page .flags-timer--urgent {
+  background: rgba(239, 68, 68, 0.16) !important;
+  border-color: rgba(239, 68, 68, 0.4) !important;
+  color: #fca5a5 !important;
+  animation: flags-urgent-blink 1s steps(2) infinite;
+}
+@keyframes flags-urgent-blink { 50% { opacity: 0.55; } }
+
+.room-page .flags-card,
+.room-page .flags-reveal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 30px 28px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(56, 189, 248, 0.03));
+  border: 1px solid rgba(56, 189, 248, 0.26);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.34);
+}
+.room-page .flags-flag-display,
+.room-page .flags-reveal-flag {
+  font-size: clamp(4.5rem, 14vw, 7rem);
+  line-height: 1;
+  filter: drop-shadow(0 12px 26px rgba(0, 0, 0, 0.55));
+}
+.room-page .flags-question-text {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #d6eefb;
+}
+.room-page .flags-input-form { display: flex; gap: 10px; width: 100%; max-width: 360px; }
+.room-page .flags-input {
+  flex: 1;
+  border-radius: 12px !important;
+}
+.room-page .flags-input:focus {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2) !important;
+}
+.room-page .flags-input-form button {
+  background: linear-gradient(135deg, #38bdf8, #0284c7) !important;
+  border: none !important;
+  color: #fff !important;
+  font-weight: 800 !important;
+}
+.room-page .flags-reveal-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; color: #8fbfe0; }
+.room-page .flags-reveal-country { font-size: 1.6rem; font-weight: 800; color: #fff; }
+.room-page .flags-reveal-winner { color: #6ee7b7; font-weight: 700; }
+.room-page .flags-reveal-nobody { color: var(--color-text-tertiary); }
+
+/* ---------- Крокодил (luxe): прячем дублирующий GameLayout-хедер ----------
+   (как в Мафии — есть свой croc-luxe-topbar, второй заголовок накладывался) */
+.croc-luxe-layout .game-header,
+.croc-luxe-layout .mobile-controls {
+  display: none !important;
+}

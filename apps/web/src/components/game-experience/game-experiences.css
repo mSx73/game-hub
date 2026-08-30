@@ -1,0 +1,671 @@
+/**
+ * PlayForFun — Immersive Game Experience System
+ * Per-game atmospheric design for host & players.
+ */
+
+/* ═══════════ BASE ATMOSPHERE ═══════════ */
+.gx-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.gx-atmosphere__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: calc(var(--gx-intensity, 0.8) * 0.45);
+  animation: gx-orb-drift 18s ease-in-out infinite;
+}
+.gx-atmosphere__orb--1 {
+  width: min(55vw, 520px);
+  height: min(55vw, 520px);
+  top: -12%;
+  left: -8%;
+  background: color-mix(in srgb, var(--gx-a) 70%, transparent);
+  animation-delay: 0s;
+}
+.gx-atmosphere__orb--2 {
+  width: min(45vw, 420px);
+  height: min(45vw, 420px);
+  bottom: -10%;
+  right: -6%;
+  background: color-mix(in srgb, var(--gx-b) 65%, transparent);
+  animation-delay: -6s;
+  animation-duration: 22s;
+}
+.gx-atmosphere__orb--3 {
+  width: min(30vw, 280px);
+  height: min(30vw, 280px);
+  top: 40%;
+  left: 55%;
+  background: color-mix(in srgb, var(--gx-a) 40%, var(--gx-b) 30%);
+  opacity: 0.25;
+  animation-delay: -12s;
+  animation-duration: 26s;
+}
+
+@keyframes gx-orb-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(3%, 2%) scale(1.06); }
+  66% { transform: translate(-2%, 3%) scale(0.96); }
+}
+
+.gx-atmosphere__grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black, transparent);
+}
+
+.gx-atmosphere__particles {
+  position: absolute;
+  inset: 0;
+}
+.gx-atmosphere__particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--gx-a) 80%, white);
+  opacity: 0;
+  left: calc(var(--i) * 8.3%);
+  top: calc((var(--i) * 17 % 100) * 1%);
+  animation: gx-particle-float 8s ease-in-out infinite;
+  animation-delay: calc(var(--i) * -0.7s);
+}
+
+@keyframes gx-particle-float {
+  0%, 100% { opacity: 0; transform: translateY(20px) scale(0.5); }
+  20% { opacity: 0.6; }
+  50% { opacity: 0.3; transform: translateY(-40vh) scale(1); }
+  80% { opacity: 0; }
+}
+
+.gx-atmosphere__watermark {
+  position: absolute;
+  right: -2%;
+  bottom: 8%;
+  font-size: clamp(8rem, 22vw, 16rem);
+  line-height: 1;
+  opacity: 0.035;
+  filter: blur(0.5px);
+  user-select: none;
+  transform: rotate(-8deg);
+}
+
+.gx-atmosphere__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 90% 80% at 50% 45%, transparent 40%, rgba(0,0,0,0.55) 100%);
+}
+
+/* ═══════════ THEME MOODS ═══════════ */
+.gx-atmosphere--grid .gx-atmosphere__grid {
+  opacity: 0.06;
+  background-size: 40px 40px;
+}
+
+.gx-atmosphere--aurora .gx-atmosphere__orb--1 {
+  animation: gx-aurora 12s ease-in-out infinite;
+}
+.gx-atmosphere--aurora .gx-atmosphere__orb--2 {
+  animation: gx-aurora 15s ease-in-out infinite reverse;
+}
+@keyframes gx-aurora {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(5%, -3%) rotate(5deg); }
+}
+
+.gx-atmosphere--float .gx-atmosphere__particle {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  animation-duration: 12s;
+}
+
+.gx-atmosphere--pulse .gx-atmosphere__orb--1 {
+  animation: gx-wave-pulse 2.5s ease-in-out infinite;
+}
+
+.gx-atmosphere--spark .gx-atmosphere__particle {
+  animation: gx-bolt 2s ease-in-out infinite;
+}
+
+.gx-atmosphere--fog .gx-atmosphere__vignette {
+  background: radial-gradient(ellipse 70% 60% at 50% 50%, transparent 20%, rgba(0,0,0,0.7) 100%);
+}
+
+.gx-atmosphere--dust .gx-atmosphere__particle {
+  width: 3px;
+  height: 3px;
+  opacity: 0.4;
+  animation-duration: 15s;
+}
+
+.gx-atmosphere--note .gx-atmosphere__watermark {
+  animation: gx-emoji-float 4s ease-in-out infinite;
+}
+
+.gx-atmosphere--burst .gx-atmosphere__particle:nth-child(odd) {
+  background: var(--gx-b);
+}
+
+.gx-atmosphere--glow .gx-atmosphere__orb {
+  filter: blur(100px);
+  opacity: 0.55;
+}
+
+/* Theme: detective uses noir pattern */
+.gx-atmosphere--detective .gx-atmosphere__grid {
+  opacity: 0.07;
+  background-size: 24px 24px;
+  animation: gx-scan 8s linear infinite;
+}
+@keyframes gx-scan {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(24px); }
+}
+
+.gx-atmosphere--bunker::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 12px,
+    rgba(245, 158, 11, 0.03) 12px,
+    rgba(245, 158, 11, 0.03) 24px
+  );
+}
+
+.gx-atmosphere--canvas .gx-atmosphere__grid {
+  opacity: 0.06;
+  background-size: 32px 32px;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.4) 1px, transparent 1px);
+}
+
+.gx-atmosphere--letters .gx-atmosphere__watermark {
+  font-family: var(--font-display, system-ui);
+  font-size: clamp(6rem, 18vw, 12rem);
+  letter-spacing: -0.05em;
+}
+
+.gx-atmosphere--confetti .gx-atmosphere__particle {
+  width: 6px;
+  height: 10px;
+  border-radius: 1px;
+  animation: gx-confetti-fall 6s linear infinite;
+}
+@keyframes gx-confetti-fall {
+  0% { opacity: 0; transform: translateY(-10vh) rotate(0deg); }
+  10% { opacity: 0.8; }
+  100% { opacity: 0; transform: translateY(110vh) rotate(720deg); }
+}
+
+.gx-atmosphere--wave .gx-atmosphere__orb--1 {
+  animation: gx-wave-pulse 3s ease-in-out infinite;
+}
+@keyframes gx-wave-pulse {
+  0%, 100% { transform: scaleX(1) scaleY(1); }
+  50% { transform: scaleX(1.15) scaleY(0.9); }
+}
+
+.gx-atmosphere--electric .gx-atmosphere__particle {
+  width: 2px;
+  height: 20px;
+  border-radius: 2px;
+  animation: gx-bolt 1.2s ease-in-out infinite;
+}
+@keyframes gx-bolt {
+  0%, 90%, 100% { opacity: 0; transform: scaleY(0); }
+  95% { opacity: 1; transform: scaleY(1); }
+}
+
+.room-page--lobby .gx-atmosphere {
+  opacity: 0.55;
+}
+.room-page--lobby .gx-atmosphere__watermark {
+  opacity: 0.02;
+}
+.room-page--lobby .gx-atmosphere__particle {
+  animation-duration: 14s;
+}
+
+.room-page--playing .gx-atmosphere {
+  opacity: 1;
+}
+
+/* ═══════════ ROOM PAGE — PLAYING MODE ═══════════ */
+.room-page--experience {
+  position: relative;
+  z-index: 1;
+}
+
+.room-page--playing.room-page--experience {
+  min-height: 100dvh;
+}
+
+.room-page--playing.room-page--experience > *:not(.gx-atmosphere):not(.croc-luxe-topbar):not(.croc-luxe-col):not(.croc-luxe-guess-mobile):not(.croc-luxe-bottom-nav) {
+  position: relative;
+  z-index: 2;
+}
+
+.room-page--playing.room-page--experience .container {
+  background: transparent;
+}
+
+/* ═══════════ HERO BAR ═══════════ */
+.gx-hero {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin: 0 0 var(--space-5);
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-2xl);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--gx-a) 18%, transparent), transparent 55%),
+    linear-gradient(225deg, color-mix(in srgb, var(--gx-b) 12%, transparent), transparent 50%),
+    rgba(8, 10, 18, 0.72);
+  border: 1px solid color-mix(in srgb, var(--gx-a) 35%, transparent);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.45),
+    0 0 80px color-mix(in srgb, var(--gx-a) 12%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+}
+
+.gx-hero__glow {
+  position: absolute;
+  top: -50%;
+  left: 20%;
+  width: 60%;
+  height: 200%;
+  background: radial-gradient(ellipse, color-mix(in srgb, var(--gx-a) 25%, transparent), transparent 70%);
+  pointer-events: none;
+  animation: gx-hero-glow 4s ease-in-out infinite;
+}
+@keyframes gx-hero-glow {
+  0%, 100% { opacity: 0.5; transform: translateX(0); }
+  50% { opacity: 1; transform: translateX(5%); }
+}
+
+.gx-hero__main {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  position: relative;
+  z-index: 1;
+}
+
+.gx-hero__emoji {
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  filter: drop-shadow(0 4px 20px color-mix(in srgb, var(--gx-a) 50%, transparent));
+  animation: gx-emoji-float 3s ease-in-out infinite;
+}
+@keyframes gx-emoji-float {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-4px) rotate(3deg); }
+}
+
+.gx-hero__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 3vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: var(--tracking-tight);
+  background: linear-gradient(120deg, #fff 0%, var(--gx-a) 55%, var(--gx-b) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gx-hero__tagline {
+  margin: 4px 0 0;
+  font-size: 0.88rem;
+  color: var(--color-text-secondary);
+  max-width: 42ch;
+  line-height: 1.45;
+}
+
+.gx-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  position: relative;
+  z-index: 1;
+}
+
+.gx-hero__badge {
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+}
+.gx-hero__badge--host {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(245, 158, 11, 0.15));
+  border-color: rgba(251, 191, 36, 0.45);
+  color: #fde68a;
+  box-shadow: 0 0 24px rgba(251, 191, 36, 0.2);
+}
+.gx-hero__badge--phase {
+  background: color-mix(in srgb, var(--gx-a) 20%, transparent);
+  border-color: color-mix(in srgb, var(--gx-a) 40%, transparent);
+  color: color-mix(in srgb, var(--gx-a) 90%, white);
+}
+
+.gx-hero__timer {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.35rem;
+  font-weight: 800;
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  background: rgba(0, 0, 0, 0.35);
+  border: 2px solid color-mix(in srgb, var(--gx-a) 50%, transparent);
+  color: var(--gx-a);
+  box-shadow: 0 0 30px color-mix(in srgb, var(--gx-a) 25%, transparent);
+}
+.gx-hero__timer--urgent {
+  color: #fca5a5;
+  border-color: #ef4444;
+  animation: gx-timer-urgent 0.6s ease infinite;
+}
+@keyframes gx-timer-urgent {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+  50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+}
+
+/* ═══════════ ENHANCED GAME AREA (all games) ═══════════ */
+/* Enhanced game area — skip luxe crocodile (has own chrome) */
+.room-page--playing .game-area.croc-luxe-main {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.room-page--playing .game-area {
+  background:
+    linear-gradient(165deg, color-mix(in srgb, var(--gx-a) 8%, transparent) 0%, transparent 45%),
+    linear-gradient(225deg, color-mix(in srgb, var(--gx-b) 6%, transparent) 0%, transparent 50%),
+    rgba(12, 14, 24, 0.82) !important;
+  border: 1px solid color-mix(in srgb, var(--gx-a) 22%, transparent) !important;
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    0 0 100px color-mix(in srgb, var(--gx-a) 8%, transparent) !important;
+  backdrop-filter: blur(24px) saturate(1.2);
+}
+
+.room-page--playing .game-area::before {
+  background: linear-gradient(90deg, var(--gx-a), var(--gx-b), var(--gx-a)) !important;
+  opacity: 0.85 !important;
+  height: 3px !important;
+}
+
+.room-page--playing .game-area-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.8vw, 1.65rem) !important;
+  text-align: center;
+  border-bottom: none !important;
+  padding-bottom: var(--space-2) !important;
+  margin-bottom: var(--space-4) !important;
+  text-shadow: 0 2px 24px color-mix(in srgb, var(--gx-a) 40%, transparent);
+}
+
+.room-page--playing .game-area-title::after {
+  width: 80px !important;
+  height: 4px !important;
+  background: linear-gradient(90deg, var(--gx-a), var(--gx-b)) !important;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--gx-a) 50%, transparent);
+}
+
+/* Primary action buttons in game areas */
+.room-page--playing .game-area .btn-primary-action,
+.room-page--playing .game-area .btn-primary,
+.room-page--playing .game-area button[type="submit"]:not(.btn-secondary):not(.btn-ghost) {
+  background: linear-gradient(135deg, var(--gx-a), var(--gx-b)) !important;
+  border: none !important;
+  box-shadow:
+    0 8px 28px color-mix(in srgb, var(--gx-a) 45%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+}
+.room-page--playing .game-area .btn-primary-action:hover,
+.room-page--playing .game-area .btn-primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 36px color-mix(in srgb, var(--gx-a) 55%, transparent) !important;
+}
+
+/* Scoreboards */
+.room-page--playing .game-scoreboard,
+.room-page--playing .scoreboard,
+.room-page--playing .croc-luxe-rank {
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.room-page--playing .game-scoreboard tr:hover,
+.room-page--playing .croc-luxe-rank:hover {
+  background: color-mix(in srgb, var(--gx-a) 10%, transparent);
+  border-color: color-mix(in srgb, var(--gx-a) 25%, transparent);
+}
+
+/* ═══════════ GAME LAYOUT (wrapper games) ═══════════ */
+.room-page--playing .game-layout {
+  background: transparent !important;
+  min-height: auto;
+  height: auto;
+}
+
+.room-page--playing .game-header {
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.25)) !important;
+  border-bottom: 1px solid color-mix(in srgb, var(--gx-a) 25%, transparent) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+.room-page--playing .game-title h1 {
+  background: linear-gradient(100deg, #fff, var(--gx-a) 70%, var(--gx-b)) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
+
+.room-page--playing .player-count {
+  background: color-mix(in srgb, var(--gx-a) 18%, transparent) !important;
+  border-color: color-mix(in srgb, var(--gx-a) 35%, transparent) !important;
+}
+
+.room-page--playing .player-tag {
+  background: linear-gradient(135deg, var(--gx-a), var(--gx-b)) !important;
+}
+
+/* ═══════════ LOBBY ENHANCEMENTS ═══════════ */
+.room-page--lobby.room-page--experience .room-id-container {
+  box-shadow:
+    0 28px 70px rgba(0, 0, 0, 0.5),
+    0 0 100px color-mix(in srgb, var(--gx-a) 15%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+.room-page--lobby.room-page--experience .lobby-game-info-card {
+  border-color: color-mix(in srgb, var(--gx-a) 30%, transparent);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* ═══════════ PER-GAME UNIQUE ACCENTS ═══════════ */
+.room-page--playing[data-game="mafia"] .game-area,
+.room-page--playing[data-game="mafia2"] .game-area {
+  box-shadow: 0 0 120px rgba(239, 68, 68, 0.12), 0 24px 64px rgba(0,0,0,0.55) !important;
+}
+
+.room-page--playing[data-game="bunker"] .game-area {
+  border-color: rgba(245, 158, 11, 0.35) !important;
+}
+
+.room-page--playing[data-game="hat"] .game-area {
+  background-image:
+    radial-gradient(circle at 20% 80%, rgba(251, 191, 36, 0.08), transparent 40%),
+    radial-gradient(circle at 80% 20%, rgba(244, 114, 182, 0.06), transparent 35%) !important;
+}
+
+.room-page--playing[data-game="crocodile"] .game-area,
+.room-page--playing[data-game="sketch"] .game-area,
+.room-page--playing[data-game="crocodile-verbs"] .game-area,
+.room-page--playing[data-game="crocodile-nouns"] .game-area {
+  border-color: rgba(34, 197, 94, 0.3) !important;
+}
+
+.room-page--playing[data-game="quiz"] .quiz-question,
+.room-page--playing[data-game="triviamurder"] .quiz-question {
+  font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+  padding: var(--space-5);
+  border-radius: var(--radius-xl);
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.12);
+}
+
+.room-page--playing[data-game="spy"] .game-area {
+  background-image: linear-gradient(180deg, rgba(99, 102, 241, 0.06), transparent 60%) !important;
+}
+
+.room-page--playing[data-game="meme"] .game-area,
+.room-page--playing[data-game="quiplash"] .game-area {
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(236, 72, 153, 0.1), transparent 35%),
+    radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.08), transparent 35%) !important;
+}
+
+.room-page--playing[data-game="wordbomb"] .game-area,
+.room-page--playing[data-game="bombparty"] .game-area {
+  animation: gx-bomb-pulse 2s ease-in-out infinite;
+}
+@keyframes gx-bomb-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.2), 0 24px 64px rgba(0,0,0,0.5); }
+  50% { box-shadow: 0 0 40px 4px rgba(244, 63, 94, 0.15), 0 24px 64px rgba(0,0,0,0.5); }
+}
+
+.room-page--playing[data-game="melody"] .game-area {
+  background-image: linear-gradient(135deg, rgba(236, 72, 153, 0.08), rgba(14, 116, 144, 0.08)) !important;
+}
+
+.room-page--playing[data-game="reaction"] .game-area,
+.room-page--playing[data-game="colors"] .game-area {
+  border-width: 2px !important;
+  animation: gx-action-border 1.5s linear infinite;
+}
+@keyframes gx-action-border {
+  0%, 100% { border-color: color-mix(in srgb, var(--gx-a) 50%, transparent) !important; }
+  50% { border-color: color-mix(in srgb, var(--gx-b) 70%, transparent) !important; }
+}
+
+.room-page--playing[data-game="hotpotato"] .game-area {
+  border-color: rgba(251, 146, 60, 0.5) !important;
+}
+
+.room-page--playing[data-game="wavelength"] .game-area {
+  background-image: linear-gradient(90deg,
+    rgba(45, 212, 191, 0.06) 0%,
+    rgba(99, 102, 241, 0.06) 50%,
+    rgba(236, 72, 153, 0.06) 100%) !important;
+}
+
+.room-page--playing[data-game="crossword"] .game-area {
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.room-page--playing[data-game="flags"] .game-area,
+.room-page--playing[data-game="logos"] .game-area,
+.room-page--playing[data-game="maps"] .game-area {
+  background-image: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.1), transparent 50%) !important;
+}
+
+/* Host control panel glow */
+.room-page--playing .host-control-panel {
+  background:
+    linear-gradient(135deg, rgba(251, 191, 36, 0.08), transparent 60%),
+    rgba(8, 10, 18, 0.85) !important;
+  border: 1px solid rgba(251, 191, 36, 0.25) !important;
+  border-radius: var(--radius-xl) !important;
+  box-shadow: 0 8px 32px rgba(251, 191, 36, 0.08) !important;
+}
+
+/* Timer display in room header */
+.room-page--playing .timer-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid color-mix(in srgb, var(--gx-a) 45%, transparent);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--gx-a) 20%, transparent);
+}
+.room-page--playing .timer-display.urgent {
+  border-color: #ef4444;
+  color: #fca5a5;
+  animation: gx-timer-urgent 0.6s ease infinite;
+}
+
+/* Input fields in games */
+.room-page--playing .game-area input[type="text"],
+.room-page--playing .game-area textarea {
+  background: rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid color-mix(in srgb, var(--gx-a) 25%, transparent) !important;
+  border-radius: var(--radius-lg) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+.room-page--playing .game-area input:focus,
+.room-page--playing .game-area textarea:focus {
+  border-color: var(--gx-a) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gx-a) 20%, transparent) !important;
+  outline: none !important;
+}
+
+/* Player list in lobby/room */
+.room-page--playing .player.active {
+  box-shadow: 0 0 20px color-mix(in srgb, var(--gx-a) 35%, transparent);
+  border-color: var(--gx-a) !important;
+}
+
+/* ═══════════ PER-GAME WATERMARK OVERRIDES (atmosphere) ═══════════ */
+.gx-atmosphere[data-game="quiz"] .gx-atmosphere__watermark { opacity: 0.04; }
+.gx-atmosphere[data-game="triviamurder"] .gx-atmosphere__orb--1 { background: rgba(220, 38, 38, 0.35); }
+.gx-atmosphere[data-game="spy"] .gx-atmosphere__grid { opacity: 0.08; }
+.gx-atmosphere[data-game="bunker"] .gx-atmosphere__orb--1 { background: rgba(245, 158, 11, 0.4); }
+.gx-atmosphere[data-game="melody"] .gx-atmosphere__orb--2 { background: rgba(236, 72, 153, 0.35); }
+.gx-atmosphere[data-game="crocodile"] .gx-atmosphere__orb--1,
+.gx-atmosphere[data-game="sketch"] .gx-atmosphere__orb--1 { background: rgba(34, 197, 94, 0.35); }
+.gx-atmosphere[data-game="hat"] .gx-atmosphere__orb--1 { background: rgba(251, 191, 36, 0.35); }
+.gx-atmosphere[data-game="wordbomb"] .gx-atmosphere__orb--1,
+.gx-atmosphere[data-game="bombparty"] .gx-atmosphere__orb--1 { background: rgba(244, 63, 94, 0.4); }
+
+/* Mobile */
+@media (max-width: 640px) {
+  .gx-hero {
+    padding: var(--space-4);
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .gx-hero__tagline { font-size: 0.82rem; }
+  .gx-atmosphere__watermark { font-size: 6rem; right: -5%; }
+}
